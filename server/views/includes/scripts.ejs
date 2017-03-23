@@ -1,0 +1,8 @@
+<!-- 除工作台主页面以外，其他页面需要加载的一些公共模块 -->
+<script>
+    window.globalApiConfig = <%- JSON.stringify(global.globalApiConfig) %>;
+</script>
+<script src="/public/lib/jquery.js"></script>
+<% if(typeof assets.js === 'string'){ %>
+<script src="<%= assets.js %>"></script>
+<% } %>

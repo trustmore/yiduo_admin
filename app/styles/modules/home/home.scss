@@ -1,0 +1,57 @@
+h1 {
+    font-size: 24px;
+    line-height: 30px;
+    padding-bottom: 20px;
+    span {
+        display: inline-block;
+        font-size: 16px;
+        font-weight: normal;
+        padding-left: 20px;
+        b {
+            color: #00CC99;
+        }
+    }
+}
+.chart-box {
+    width: 380px;
+    height: 340px;
+    float: left;
+}
+.dash-box {
+    height: 340px;
+}
+.overview-box {
+    margin-left: 400px;
+    height: 100%;
+    h2 {
+        text-align: right;
+    }
+}
+.options {
+    zoom: 1;
+    overflow: hidden;
+}
+.option {
+    float: right;
+    text-align: center;
+    background-color: rgba(215, 215, 215, 1);
+    color: #999;
+    padding: 4px 8px;
+    margin: 10px 0 10px 10px;
+    font-size: 12px;
+    width: 60px;
+}
+.overview {
+    border-top: 4px solid #97E2E2;
+    width: 22%;
+    float: left;
+    margin-top: 40px;
+    margin-right: 3%;
+    font-size: 16px;
+}
+.overview-last {
+    margin-right: 0;
+}
+.ov-title {
+    line-height: 40px;
+}

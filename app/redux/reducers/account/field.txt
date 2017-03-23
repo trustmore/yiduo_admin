@@ -1,0 +1,45 @@
+ID
+
+// 客户信息
+Name:                      chi.URLParam(req, "name"),                           //  名称
+PhoneOffice:               chi.URLParam(req, "phone_office"),                   //  办公电话
+PhoneAlternate:            chi.URLParam(req, "phone_alternate"),                //  备用电话
+Website:                   chi.URLParam(req, "website"),                        //  网址
+PhoneFax:                  chi.URLParam(req, "phone_fax"),                      //  传真
+TickerSymbol:              chi.URLParam(req, "ticker_symbol"),                  //  股票代号
+SicCode:                   chi.URLParam(req, "sic_code"),                       //  标准产业分类代码
+
+
+// 账单地址
+BillingAddressStreet:      chi.URLParam(req, "billing_address_street"),         //  街道
+BillingAddressCity:        chi.URLParam(req, "billing_address_city"),           //  城市
+BillingAddressState:       chi.URLParam(req, "billing_address_state"),          //  省份
+BillingAddressPostalCode:  chi.URLParam(req, "billing_address_postalcode"),     //  邮编
+BillingAddressCountry:     chi.URLParam(req, "billing_address_country"),        //  国家
+
+
+// 送货地址
+ShippingAddressStreet:     chi.URLParam(req, "shipping_address_street"),        //  街道
+ShippingAddressCity:       chi.URLParam(req, "shipping_address_city"),          //  城市
+ShippingAddressState:      chi.URLParam(req, "shipping_address_state"),         //  省份
+ShippingAddressPostalCode: chi.URLParam(req, "shipping_address_postalcode"),    //  邮编
+ShippingAddressCountry:    chi.URLParam(req, "shipping_address_country"),       //  国家
+
+
+
+Description:               chi.URLParam(req, "description"),                    //  说明
+
+Ownership:                 chi.URLParam(req, "ownership"),                      //  负责人
+
+
+// 详细信息
+AccountType:               chi.URLParam(req, "account_type"),                   //  类型
+Industry:                  chi.URLParam(req, "industry"),                       //  行业
+AnnualRevenue:             chi.URLParam(req, "annual_revenue"),                 //  年收入
+Employees:                 chi.URLParam(req, "employees"),                      //  员工
+Rating:                    chi.URLParam(req, "rating"),                         //  上级
+
+
+
+
+

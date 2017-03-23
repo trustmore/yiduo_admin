@@ -1,0 +1,29 @@
+:global {
+    #app {
+        background-color: #F4F4F4;
+    }
+    .app-inner {
+        height: 100%;
+    }
+    .main-box {
+        height: -moz-calc(100% - 74px);
+        height: -webkit-calc(100% - 74px);
+        height: calc(100% - 74px);
+    }
+    .nav {
+        height: 100%;
+        background-color: rgba(64, 80, 94, 1);
+    }
+    .logo {
+        text-align: center;
+        color: #FFF;
+        padding: 30px 0;
+        font-size: 16px;
+    }
+    .ant-layout-sider-collapsed .anticon {
+        font-size: 16px;
+    }
+    .ant-layout-sider-collapsed .nav-text {
+        display: none;
+    }
+}
