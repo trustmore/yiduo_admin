@@ -110,3 +110,64 @@ export const drewRaptileText = (chart) => {
         fontSize: '16px'
     }).add();
 };
+
+export const mapConfig = (dom) => {
+    let data = [{
+            code: "CN",
+            country: "中国",
+            color: '#FF0066',
+            z: 30552
+        }, {
+            code: "DE",
+            country: "德国",
+            color: '#FF6600',
+            z: 28970
+        }, {
+            code: "US",
+            country: "美国",
+            z: 39208
+        }, {
+            code: "GB",
+            country: "英国",
+            z: 10000
+        }
+    ];
+    let config = {
+        credits: {
+            enabled: false
+        },
+        chart: {
+            borderWidth: 1,
+            renderTo: dom,
+            map: 'custom/world'
+        },
+        title: {
+            text: null
+        },
+        legend: {
+            enabled: false
+        },
+        mapNavigation: {
+            enabled: false,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+        series: [{
+            name: 'Countries',
+            color: '#E0E0E0',
+            enableMouseTracking: true
+        }, {
+            type: 'mapbubble',
+            name: '爬虫监控',
+            joinBy: ['iso-a2', 'code'],
+            data: data,
+            minSize: 8,
+            maxSize: '10%',
+            tooltip: {
+                pointFormat: '{point.country}: {point.z} 个'
+            }
+        }]
+    };
+    return config;
+}

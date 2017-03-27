@@ -32,6 +32,7 @@
     "css-loader": "^0.26.0",
     "gulp": "^3.9.1",
     "highcharts": "^5.0.9",
+    "highcharts-data": "^0.1.2",
     "highcharts-more": "^0.1.2",
     "history": "^3.2.1",
     "immutable": "^3.8.1",

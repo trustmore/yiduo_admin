@@ -6,9 +6,14 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 import Highcharts from 'highcharts';
 import HighchartsMore from 'highcharts-more';
+// import HighchartsData from 'highcharts-data';
+import HighchartsMap from 'highcharts/modules/map';
+HighchartsMap(Highcharts);
+// HighchartsData(Highcharts);
 HighchartsMore(Highcharts);
-import { raptileConfig, drewRaptileBackground, drewRaptileText } from '../charts/chart-config';
+import { raptileConfig, drewRaptileBackground, drewRaptileText, mapConfig } from '../charts/chart-config';
 import { numberWithCommas } from 'utils/api';
+import mapData from '../charts/map-paths';
 
 import style from 'styles/modules/home/home.scss';
 
@@ -24,6 +29,7 @@ export default class Home extends Component {
     };
     componentDidMount() {
         this._buildRaptileChart();
+        this._buildMapChart();
     }
     _buildRaptileChart() {
         let raptileDom = ReactDOM.findDOMNode(this.refs.chart);
@@ -32,6 +38,13 @@ export default class Home extends Component {
             drewRaptileText(chart);
             drewRaptileBackground(chart);
         });
+    }
+    _buildMapChart() {
+        Highcharts.maps["custom/world"] = mapData;
+        let dom = ReactDOM.findDOMNode(this.refs.mapchart);
+        console.log('===dom===', mapData);
+        let chartConfig = mapConfig(dom);
+        new Highcharts.mapChart(chartConfig, chart => {});
     }
     _renderOptions() {
         let options = ['近1周', '近3天', '近1天', '近3小时', '实时'].map((option, index) => {
@@ -82,6 +95,24 @@ export default class Home extends Component {
                             {this._renderOverviews()}
                         </div>
                     </div>
+                </div>
+                <h1 style={{marginTop: '20px'}}>访问浏览</h1>
+                <div className={`${style['visitor-box']} module-bg`}>
+                    <div className="overview">
+                        <h2>此刻网站上有</h2>
+                        <h3>8760</h3>
+                        <h4>实时访客</h4>
+                        <div className="label">
+                            <div className="raptile">
+                                <span></span>爬虫
+                            </div>
+                            <div className="nomal">
+                                <span></span>正常用户
+                            </div>
+                        </div>
+                    </div>
+                    <div className="overview"></div>
+                    <div style={{width: '600px', height: '400px'}} ref="mapchart" />
                 </div>
             </div>
         );
