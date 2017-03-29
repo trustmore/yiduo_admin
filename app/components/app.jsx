@@ -1,10 +1,7 @@
-import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import GlobalHeader from './global-header';
 import GlobalNav from './global-nav';
-import { Layout } from 'antd';
-const { Content } = Layout;
 
 require('styles/global/style.scss');
 
@@ -27,17 +24,17 @@ export default class App extends Component {
         let props: Object = _.assign({collapsed: true}, this.state, this.props);
         delete props.children;
         return (
-            <Layout className="app-inner">
+            <div className="app-inner">
                 <GlobalHeader />
-                <Layout className="ant-layout-has-sider main-box">
+                <div className="main-box">
                     <GlobalNav collapsed={props.collapsed} />
-                    <Layout>
-                        <Content style={{ margin: '0 16px 0', padding: 20, minHeight: 280 }}>
+                    <div  className="content-box">
+                        <div style={{ margin: '0 16px 0', padding: 20, minHeight: 280 }}>
                             {this.props.children && React.cloneElement(this.props.children, props)}
-                        </Content>
-                    </Layout>
-                </Layout>
-            </Layout>
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
     }
 }

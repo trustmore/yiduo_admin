@@ -13,6 +13,7 @@ import apiConfig from '../../config/apiconfig/config-now';
 const conditional = require('koa-conditional-get');
 const etag = require('koa-etag');
 const compressor = require('koa-compressor');
+const gzip = require('koa-gzip');
 const convert = require('koa-convert');
 
 const mocker = require('node-mocker');
@@ -46,6 +47,7 @@ export default {
             app.use(convert(conditional()));
             app.use(convert(etag()));
             app.use(convert(compressor()));
+            // app.use(convert(gzip()));
         }
 
         // static

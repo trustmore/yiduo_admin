@@ -18,14 +18,9 @@ body {
 	margin: 0;
 }
 :global {
-
 	#App {
 		height: 100%;
-	}
-	#container {
-		display: flex;
-		flex-direction: row;
-		height: 100%;
+		background-color: #F4F4F4;
 	}
 	.module-bg {
 		background-color: #FFF;
@@ -33,5 +28,54 @@ body {
 		-webkit-border-radius: 6px;
 		border-radius: 6px;
 		background-color: #FFF;
+	}
+    .app-inner {
+        height: 100%;
+    }
+    .main-box {
+        height: -moz-calc(100% - 74px);
+        height: -webkit-calc(100% - 74px);
+        height: calc(100% - 74px);
+    }
+    .content-box {
+        margin-left: 200px;
+        height: 100%;
+        overflow: auto;
+    }
+	.nav-box {
+		height: 100%;
+		float: left;
+		width: 200px;
+		background-color: #404040;
+	}
+    .nav {
+        height: 100%;
+        background-color: rgba(64, 80, 94, 1);
+    }
+    .logo {
+        text-align: center;
+        color: #FFF;
+        padding: 30px 0;
+        font-size: 16px;
+    }
+	.header-box {
+	    padding: 20px;
+	    background-color: #FFFFFF;
+	    height: 74px;
+	}
+	.header-left {
+	    float: left;
+	    h2 {
+	        float: left;
+	        font-size: 24px;
+	    }
+	    h3 {
+	        float: left;
+	        margin-top: 9px;
+	        margin-left: 20px;
+	    }
+	}
+	.header-right {
+	    float: right;
 	}
 }
