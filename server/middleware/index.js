@@ -60,7 +60,7 @@ export default {
                 prefix: '/api',
                 backend_prefix: '/api',
                 // host: apiConfig.apiHost
-                host: 'http://localhost:3000'
+                host: 'http://localhost:7001'
             }]
         })));
 

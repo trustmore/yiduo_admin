@@ -1,0 +1,7 @@
+export default [
+    // 获取 STUDENT list
+    'FETCH_TEACHER_LIST_DATA',
+    'FETCH_TEACHER_LIST_DATA_SUCCESS',
+    'FETCH_TEACHER_LIST_DATA_FAIL'
+
+];

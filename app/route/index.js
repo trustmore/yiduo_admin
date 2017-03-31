@@ -7,7 +7,9 @@ export default {
     },
     childRoutes: [
         require('./home'),
-        require('./account'),
+        require('./student'),
+        require('./teacher'),
+        require('./clazz'),
         require('./dashboard'),
         // not found router must at last
         {

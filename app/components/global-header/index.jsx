@@ -16,8 +16,8 @@ export default class GlobalHeader extends Component {
         return (
             <header className="header-box">
                 <div className="header-left">
-                    <h2>金 睛</h2>
-                    <h3>数据反爬服务平台</h3>
+                    <h2>易多</h2>
+                    <h3>后台管理</h3>
                 </div>
                 <div className="header-right">
                     <div>{this.props.user.get('name')}</div>

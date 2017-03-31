@@ -1,15 +1,15 @@
 export default {
-    path: 'account',
+    path: 'student',
     indexRoute: {
         onEnter: () => {},
-        component: require('components/account')
+        component: require('components/student')
     },
     childRoutes: [
-        // {
-        //     path: 'create',
-        //     onEnter: () => {},
-        //     component: require('components/account/account-create')
-        // },
+        {
+            path: 'add',
+            onEnter: () => {},
+            component: require('components/student/add')
+        }
         // {
         //     path: 'detail(/:id)',
         //     onEnter: () => {},

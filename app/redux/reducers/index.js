@@ -1,7 +1,9 @@
 import I from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import account from './account';
+import student from './student';
+import clazz from './clazz';
+import teacher from './teacher';
 import user from './user';
 
 let initialState = I.fromJS({
@@ -20,6 +22,8 @@ let router = (state = initialState, action) => {
 
 export default combineReducers({
     router,
-    account,
+    student,
+    teacher,
+    clazz,
     user
 });

@@ -29,76 +29,43 @@ export default class GlobalNav extends Component {
             <div className="nav-box">
                 <Menu
                     theme="dark"
-                    onClick={ null }
                     defaultOpenKeys={['sub3']}
                     style={{ width: 200 }}
                     mode="inline" >
                     <Menu.Item key="sub1">
                         <Link activeClassName="active" to="/">
                             <Icon type="mail" />
-                            <span className="nav-text">安全情报板</span>
+                            <span className="nav-text">首页</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="sub2">
-                        <Link activeClassName="active" to="/dashboard">
+                        <Link activeClassName="active" to="/teacher">
                             <Icon type="mail" />
-                            <span className="nav-text">防御效果</span>
+                            <span className="nav-text">老师</span>
                         </Link>
                     </Menu.Item>
-                    <SubMenu key="sub3" title={<span><Icon type="mail" /><span>爬虫分析</span></span>}>
-                        <Menu.Item key="sub4">
-                            <Link activeClassName="active" to="/dashboard">
-                                <Icon type="mail" />
-                                <span className="nav-text">地域分布</span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="sub5">
-                            <Link activeClassName="active" to="/dashboard">
-                                <Icon type="mail" />
-                                <span className="nav-text">地域分布</span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="sub6">
-                            <Link activeClassName="active" to="/dashboard">
-                                <Icon type="mail" />
-                                <span className="nav-text">爬虫来源</span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="sub7">
-                            <Link activeClassName="active" to="/dashboard">
-                                <Icon type="mail" />
-                                <span className="nav-text">被爬取数据</span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="sub2">
-                            <Link activeClassName="active" to="/dashboard">
-                                <Icon type="mail" />
-                                <span className="nav-text">爬虫细查</span>
-                            </Link>
-                        </Menu.Item>
-                    </SubMenu>
-                    <Menu.Item key="sub8">
-                        <Link activeClassName="active" to="/dashboard">
+                    <Menu.Item key="sub3">
+                        <Link activeClassName="active" to="/student">
                             <Icon type="mail" />
-                            <span className="nav-text">反爬报告</span>
+                            <span className="nav-text">学生</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="sub9">
-                        <Link activeClassName="active" to="/dashboard">
+                    <Menu.Item key="sub4">
+                        <Link activeClassName="active" to="/clazz">
                             <Icon type="mail" />
-                            <span className="nav-text">爬虫防御配置</span>
+                            <span className="nav-text">班级</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="sub10">
-                        <Link activeClassName="active" to="/dashboard">
+                    <Menu.Item key="sub5">
+                        <Link activeClassName="active" to="/course">
                             <Icon type="mail" />
-                            <span className="nav-text">用户管理</span>
+                            <span className="nav-text">课程</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="sub11">
-                        <Link activeClassName="active" to="/dashboard">
+                    <Menu.Item key="sub6">
+                        <Link activeClassName="active" to="/parent">
                             <Icon type="mail" />
-                            <span className="nav-text">日志管理</span>
+                            <span className="nav-text">家长</span>
                         </Link>
                     </Menu.Item>
                 </Menu>
