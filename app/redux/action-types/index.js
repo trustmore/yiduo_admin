@@ -4,11 +4,13 @@ import student from './student';
 import clazz from './clazz';
 import teacher from './teacher';
 import user from './user';
+import article from './article';
 
 let actions = [].concat(
     student,
     teacher,
     clazz,
+    article,
     user
 );
 const _actions = {};

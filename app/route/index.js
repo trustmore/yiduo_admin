@@ -9,6 +9,7 @@ export default {
         require('./home'),
         require('./student'),
         require('./teacher'),
+        require('./article'),
         require('./clazz'),
         require('./dashboard'),
         // not found router must at last

@@ -1,10 +1,15 @@
 import _ from 'lodash';
 import superagent from 'superagent';
+import Cookies from 'cookies-js';
 
 function makeUrl(url) {
     let host = '/api';
     return host + url;
 }
+let _getToken = () => {
+    return Cookies.get('_authenticated');
+}
+
 
 /**
  * @this {function}
@@ -27,8 +32,10 @@ export const ajax = (ops = {}) => {
         error: ops.error,
         success: ops.success
     };
+    let token = _getToken() || '';
     let request = superagent(options.type, makeUrl(options.url))
         .set('Content-Type', options.contentType)
+        .set('Authorization', token)
         .accept('application/json')
         .on('error', (err) => {
             return options.error ? options.error(err) : null;
@@ -50,6 +57,9 @@ export const ajax = (ops = {}) => {
 
     return request.end((err, res) => {
         if (err) {
+            if (res.status === 401) {
+                return window.location.href = '/signin';;
+            }
             return options.error ? options.error(err, res) : null;
         }
 
@@ -104,3 +114,5 @@ export const encodeObjectToQuery = data => {
     });
     return params.join('&');
 };
+
+export const getToken = _getToken;
