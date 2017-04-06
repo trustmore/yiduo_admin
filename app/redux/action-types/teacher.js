@@ -1,7 +1,15 @@
 export default [
-    // 获取 STUDENT list
+    // 获取 teacher list
     'FETCH_TEACHER_LIST_DATA',
     'FETCH_TEACHER_LIST_DATA_SUCCESS',
-    'FETCH_TEACHER_LIST_DATA_FAIL'
+    'FETCH_TEACHER_LIST_DATA_FAIL',
 
+    // 创建 teacher
+    'CREATE_TEACHER',
+    'CREATE_TEACHER_SUCCESS',
+    'CREATE_TEACHER_FAIL',
+
+    'DELETE_TEACHER',
+    'DELETE_TEACHER_SUCCESS',
+    'DELETE_TEACHER_FAIL'
 ];

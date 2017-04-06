@@ -1,9 +1,10 @@
 // import {push} from 'react-router-redux';
 import React, { Component, PropTypes } from 'react';
-import {Link} from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Table, Icon } from 'antd';
+import { Table, Icon, Popconfirm } from 'antd';
+import { remove } from 'redux/reducers/teacher';
 
 import style from 'styles/modules/home/home.scss';
 
@@ -11,11 +12,12 @@ import style from 'styles/modules/home/home.scss';
     state => ({
         teacherList: state.getIn(['teacher', 'list'])
     }),
-    dispatch => bindActionCreators({fetch}, dispatch)
+    dispatch => bindActionCreators({remove}, dispatch)
 )
 export default class Teacher extends Component {
     static propTypes = {
-        teacherList: PropTypes.object
+        teacherList: PropTypes.object,
+        remove: PropTypes.object
     };
     constructor(props) {
         super(props);
@@ -31,33 +33,38 @@ export default class Teacher extends Component {
             );
         }
     }
+    remove(_id) {
+        this.props.remove({_id}).then(ret => {
+            if (ret && ret.type === 'success') {
+                browserHistory.push('/teacher');
+            }
+        });
+        return false;
+    }
     _renderTeacherList() {
         const columns = [
             {
                 title: '姓名',
                 dataIndex: 'name',
                 key: 'name',
-                render: text => <a href="#">{text}</a>,
+                render: (text, i) => <Link to={`/teacher/${i._id}`}>{text}</Link>
             },
             {
                 title: '操作',
                 key: 'action',
-                render: (text, s) => (
+                render: (text, i) => (
                     <span>
-                        <a href="#">详情</a>
+                        <Link to={`/teacher/${i._id}`}>详情</Link>
                         <span className="ant-divider" />
-                        <a href="#">删除</a>
-                        <span className="ant-divider" />
-                        <a href="#" className="ant-dropdown-link">
-                        更多 <Icon type="down" />
-                        </a>
+                        <Popconfirm title="确认删除吗？" onConfirm={() => this.remove(i._id)} okText="确认" cancelText="取消">
+                            <a href="#">删除</a>
+                        </Popconfirm>
                     </span>
                 )
             }
         ];
         let dataList = [];
         let teacherList = this.props.teacherList.toArray();
-        console.log('teacherList', teacherList);
         teacherList.map((t, i) => {
             let tmp = {
                 _id: t.get('_id'),

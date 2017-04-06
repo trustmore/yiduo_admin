@@ -15,6 +15,7 @@ import AddArticleForm from './AddArticleForm';
 export default class StudentAdd extends Component {
     static propTypes = {
         clazzList: PropTypes.object,
+        voices: PropTypes.object,
         create: PropTypes.func
     };
     constructor(props) {
@@ -31,7 +32,7 @@ export default class StudentAdd extends Component {
         }
     }
     _handleAddSubmit = (values) => {
-        console.log('_handleAddSubmit=>', values, this.props);
+        console.log('_handleAddSubmit=>', values, this.props.from);
         this.props.create(values).then(ret => {
             console.log('create===>', ret);
             if (ret && ret.type === 'success') {
@@ -45,8 +46,8 @@ export default class StudentAdd extends Component {
         return (
             <div>
                 <div>
-                    <h1>添加班级</h1>
-                    <AddArticleForm onSubmit={this._handleAddSubmit} />
+                    <h1>添加文章</h1>
+                    <AddArticleForm voice={{}} onSubmit={this._handleAddSubmit} />
                 </div>
             </div>
         );

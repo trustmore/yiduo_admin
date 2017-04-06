@@ -4,6 +4,7 @@ const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
+import { formItemLayout, tailFormItemLayout } from '../../utils/component-config';
 
 class AddStudentForm extends Component {
     static propTypes = {
@@ -29,35 +30,13 @@ class AddStudentForm extends Component {
     renderOptions = () => {
         const options = [];
         this.props.teacherList.map(t => {
-            options.push(<Option key={t.get('_id')}>{clazz.get('name')}</Option>);
+            options.push(<Option key={t.get('_id')}>{t.get('name')}</Option>);
         });
         return options;
     }
     render() {
         console.log('----', this.props.clazzList);
         const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 24 },
-                sm: { span: 6 },
-            },
-            wrapperCol: {
-                xs: { span: 24 },
-                sm: { span: 14 },
-            }
-        };
-        const tailFormItemLayout = {
-            wrapperCol: {
-                xs: {
-                    span: 24,
-                    offset: 0,
-                },
-                sm: {
-                    span: 14,
-                    offset: 6,
-                }
-            }
-        };
         return (
             <Form onSubmit={this.handleSubmit}>
                 <FormItem
@@ -81,7 +60,7 @@ class AddStudentForm extends Component {
                     label="年级" >
                     {getFieldDecorator('grade', {
                         rules: [{
-                            type: 'number',
+                            pattern: /\d+/,
                             message: '请填写年级数字'
                         }, {
                             required: true,
@@ -96,7 +75,7 @@ class AddStudentForm extends Component {
                     label="班次" >
                     {getFieldDecorator('rank', {
                         rules: [{
-                            type: 'number',
+                            pattern: /\d+/,
                             message: '请填写班次数字'
                         }, {
                             required: true,
@@ -113,7 +92,7 @@ class AddStudentForm extends Component {
                         rules: [{ required: true, message: '请选择任课老师' }],
                         onChange: this.handleSelectChange,
                     })(
-                        <Select placeholder="请选择任课老师">
+                        <Select multiple placeholder="请选择任课老师">
                             {this.renderOptions()}
                         </Select>
                     )}

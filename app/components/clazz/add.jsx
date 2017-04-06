@@ -3,12 +3,13 @@ import React, { Component, PropTypes } from 'react';
 import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { create } from 'redux/reducers/student';
+import { create } from 'redux/reducers/clazz';
 import AddClazzForm from './AddClazzForm';
 
 @connect(
     state => ({
-        clazzList: state.getIn(['clazz', 'list'])
+        clazzList: state.getIn(['clazz', 'list']),
+        teacherList: state.getIn(['teacher', 'list'])
     }),
     dispatch => bindActionCreators({create}, dispatch)
 )
@@ -41,12 +42,13 @@ export default class StudentAdd extends Component {
     }
     render() {
         let clazzList = this.props.clazzList;
+        let teacherList = this.props.teacherList;
         console.log('====in render clazzList====', clazzList);
         return (
             <div>
                 <div>
                     <h1>添加班级</h1>
-                    <AddClazzForm clazzList={clazzList} onSubmit={this._handleAddSubmit} />
+                    <AddClazzForm teacherList={teacherList} clazzList={clazzList} onSubmit={this._handleAddSubmit} />
                 </div>
             </div>
         );

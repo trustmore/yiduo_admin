@@ -4,6 +4,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import student from './student';
 import clazz from './clazz';
 import teacher from './teacher';
+import article from './article';
 import user from './user';
 
 let initialState = I.fromJS({
@@ -25,5 +26,6 @@ export default combineReducers({
     student,
     teacher,
     clazz,
+    article,
     user
 });

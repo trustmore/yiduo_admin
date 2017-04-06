@@ -9,7 +9,8 @@ import style from 'styles/modules/home/home.scss';
 
 @connect(
     state => ({
-        clazzList: state.getIn(['clazz', 'list'])
+        clazzList: state.getIn(['clazz', 'list']),
+        teacherList: state.getIn(['teacher', 'list'])
     }),
     dispatch => bindActionCreators({}, dispatch)
 )

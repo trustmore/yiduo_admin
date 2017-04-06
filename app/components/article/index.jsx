@@ -11,7 +11,7 @@ import style from 'styles/modules/home/home.scss';
 @connect(
     state => ({
         isFetching: state.getIn(['article', 'isFetching']),
-        clazzList: state.getIn(['article', 'list'])
+        articleList: state.getIn(['article', 'list'])
     }),
     dispatch => bindActionCreators({fetch}, dispatch)
 )
@@ -66,9 +66,9 @@ export default class Article extends Component {
             }
         ];
         let dataList = [];
-        if (this.props.articList) {
-            let articList = this.props.articList.toArray();
-            articList.map((t, i) => {
+        if (this.props.articleList) {
+            let articleList = this.props.articleList.toArray();
+            articleList.map((t, i) => {
                 let tmp = {
                     key: t.get('_id'),
                     _id: t.get('_id'),

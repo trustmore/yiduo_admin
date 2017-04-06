@@ -12,6 +12,7 @@ class AddArticleForm extends Component {
     static propTypes = {
         onSubmit: PropTypes.func,
         clazzList: PropTypes.object,
+        voices: PropTypes.object,
         teacherList: PropTypes.object
     };
     handleSubmit = (e) => {
@@ -19,22 +20,27 @@ class AddArticleForm extends Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
+                console.log('props: ', this.props);
+                let voiceUploaded = true;
+                for (let key in values) {
+                    if (key.match(/^sentence-/)) {
+                        let voiceKey = key.replace(/^sentence-/, 'voice-');
+                        if (!this.props.voice[voiceKey]) {
+                            voiceUploaded = false;
+                        }
+                    }
+                }
+                if (!voiceUploaded) {
+                    message.warn('请上传相应语音');
+                    return false;
+                } else {
+                    for (let key in this.props.voice) {
+                        values[key] = this.props.voice[key];
+                    }
+                }
                 this.props.onSubmit(values);
             }
         });
-    }
-    handleSelectChange = (value) => {
-        console.log(value);
-        this.props.form.setFieldsValue({
-            teachers: value,
-        });
-    }
-    renderOptions = () => {
-        const options = [];
-        this.props.teacherList.map(t => {
-            options.push(<Option key={t.get('_id')}>{clazz.get('name')}</Option>);
-        });
-        return options;
     }
     remove = (k) => {
         const { form } = this.props;
@@ -43,8 +49,9 @@ class AddArticleForm extends Component {
             return;
         }
         form.setFieldsValue({
-            keys: keys.filter(key => key !== k),
+            keys: keys.filter(key => key !== k)
         });
+        delete this.props.voice[`voice-${k}`];
     }
     add = () => {
         uuid++;
@@ -76,40 +83,46 @@ class AddArticleForm extends Component {
             sm: { span: 20, offset: 4 },
           },
         };
-        const uplaodProps = {
+        const uplaodDefaultProps = {
             name: 'file',
-            action: '/api/upload',
+            action: '/api/upload/voice',
             headers: {
                 authorization: getToken(),
             },
-            defaultFileList: [],
-            onChange(info) {
-                if (info.file.status !== 'uploading') {
-                    console.log(info.file, info.fileList);
-                }
-                if (info.file.status === 'done') {
-                    message.success(`${info.file.name} file uploaded successfully`);
-                } else if (info.file.status === 'error') {
-                    message.error(`${info.file.name} file upload failed.`);
-                }
-            }
+            defaultFileList: []
         };
         getFieldDecorator('keys', { initialValue: [] });
         const keys = getFieldValue('keys');
 
         const formItems = keys.map((k, index) => {
+            let voice = `voice-${k}`;
+            let uplaodProps = Object.assign({
+                voice,
+                key: voice,
+                onChange: (info) => {
+                    if (info.file.status !== 'uploading') {
+                        console.log(info.file, info.fileList);
+                    }
+                    if (info.file.status === 'done') {
+                        message.success(`${info.file.name} 上传成功`);
+                        this.props.voice[voice] = info.file.response.id;
+                    } else if (info.file.status === 'error') {
+                        message.error(`${info.file.name} 上传失败`);
+                    }
+                }
+            }, uplaodDefaultProps);;
             return (
                 <FormItem
                     {...formItemLayout}
                     label={`句子${index+1}`}
                     required={false}
                     key={k} >
-                    {getFieldDecorator(`names-${k}`, {
+                    {getFieldDecorator(`sentence-${k}`, {
                         validateTrigger: ['onChange', 'onBlur'],
                         rules: [{
                             required: true,
                             whitespace: true,
-                            message: "Please input passenger's name or delete this field.",
+                            message: "请输入句子内容",
                         }],
                     })(
                         <Input type='textarea' placeholder="句子" style={{ width: '60%', marginRight: 8 }} />

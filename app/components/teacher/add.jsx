@@ -3,8 +3,8 @@ import React, { Component, PropTypes } from 'react';
 import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { create } from 'redux/reducers/student';
-import AddStudentForm from './AddStudentForm';
+import { create } from 'redux/reducers/teacher';
+import AddTeacherForm from './addTeacherForm';
 
 @connect(
     state => ({
@@ -35,7 +35,7 @@ export default class StudentAdd extends Component {
         this.props.create(values).then(ret => {
             console.log('create===>', ret);
             if (ret && ret.type === 'success') {
-                browserHistory.push('/student');
+                browserHistory.push('/teacher');
             }
         });
     }
@@ -45,8 +45,8 @@ export default class StudentAdd extends Component {
         return (
             <div>
                 <div>
-                    <h1>添加学生</h1>
-                    <AddStudentForm clazzList={clazzList} onSubmit={this._handleAddSubmit} />
+                    <h1>添加老师</h1>
+                    <AddTeacherForm clazzList={clazzList} onSubmit={this._handleAddSubmit} />
                 </div>
             </div>
         );

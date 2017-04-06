@@ -34,31 +34,31 @@ export default class GlobalNav extends Component {
                     mode="inline" >
                     <Menu.Item key="sub1">
                         <Link activeClassName="active" to="/">
-                            <Icon type="mail" />
+                            <Icon type="home" />
                             <span className="nav-text">首页</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="sub2">
                         <Link activeClassName="active" to="/teacher">
-                            <Icon type="mail" />
+                            <Icon type="user" />
                             <span className="nav-text">老师</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="sub3">
                         <Link activeClassName="active" to="/student">
-                            <Icon type="mail" />
+                            <Icon type="smile-o" />
                             <span className="nav-text">学生</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="sub4">
                         <Link activeClassName="active" to="/clazz">
-                            <Icon type="mail" />
+                            <Icon type="team" />
                             <span className="nav-text">班级</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="sub5">
                         <Link activeClassName="active" to="/article">
-                            <Icon type="mail" />
+                            <Icon type="file-text" />
                             <span className="nav-text">文章</span>
                         </Link>
                     </Menu.Item>

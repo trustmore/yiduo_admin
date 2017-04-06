@@ -31,9 +31,7 @@ export default class StudentAdd extends Component {
         }
     }
     _handleAddSubmit = (values) => {
-        console.log('_handleAddSubmit=>', values, this.props);
         this.props.create(values).then(ret => {
-            console.log('create===>', ret);
             if (ret && ret.type === 'success') {
                 browserHistory.push('/student');
             }
@@ -41,7 +39,6 @@ export default class StudentAdd extends Component {
     }
     render() {
         let clazzList = this.props.clazzList;
-        console.log('====in render clazzList====', clazzList);
         return (
             <div>
                 <div>
