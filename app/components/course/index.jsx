@@ -4,20 +4,20 @@ import {Link} from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Icon } from 'antd';
-import { fetch } from 'redux/reducers/article';
+import { fetch } from 'redux/reducers/course';
 
 import style from 'styles/modules/home/home.scss';
 
 @connect(
     state => ({
-        isFetching: state.getIn(['article', 'isFetching']),
-        articleList: state.getIn(['article', 'list'])
+        isFetching: state.getIn(['course', 'isFetching']),
+        courseList: state.getIn(['course', 'list'])
     }),
     dispatch => bindActionCreators({fetch}, dispatch)
 )
-export default class Article extends Component {
+export default class CourseList extends Component {
     static propTypes = {
-        articleList: PropTypes.object,
+        courseList: PropTypes.object,
         isFetching: PropTypes.object
     };
     constructor(props) {
@@ -35,13 +35,13 @@ export default class Article extends Component {
             );
         }
     }
-    _renderArticleList() {
+    _renderCourseList() {
         const columns = [
             {
                 title: '名称',
                 dataIndex: 'name',
                 key: 'name',
-                render: text => <a href="#">{text}</a>,
+                render: (text, i) => <Link to={`/course/${i._id}/edit`}>{text}</Link>
             },
             {
                 title: '句子数',
@@ -66,9 +66,9 @@ export default class Article extends Component {
             }
         ];
         let dataList = [];
-        if (this.props.articleList) {
-            let articleList = this.props.articleList.toArray();
-            articleList.map((t, i) => {
+        if (this.props.courseList) {
+            let courseList = this.props.courseList.toArray();
+            courseList.map((t, i) => {
                 let tmp = {
                     key: t.get('_id'),
                     _id: t.get('_id'),
@@ -87,14 +87,14 @@ export default class Article extends Component {
         return (
             <div id={style.home}>
                 <div>
-                    <h1>article</h1>
-                    <Link to="/article/add">
+                    <h1>course</h1>
+                    <Link to="/course/add">
                         <Icon type="user-add" />
                         <span>添加文章</span>
                     </Link>
                 </div>
                 { this._renderLoading() }
-                { this._renderArticleList() }
+                { this._renderCourseList() }
             </div>
         );
     }

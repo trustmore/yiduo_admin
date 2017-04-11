@@ -57,9 +57,9 @@ export default class GlobalNav extends Component {
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="sub5">
-                        <Link activeClassName="active" to="/article">
+                        <Link activeClassName="active" to="/course">
                             <Icon type="file-text" />
-                            <span className="nav-text">文章</span>
+                            <span className="nav-text">课程</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="sub6">

@@ -6,43 +6,47 @@ import { browserHistory } from 'react-router';
 
 import { ajax } from 'utils/request';
 import {
-    FETCH_ARTICLE_LIST_DATA,
-    FETCH_ARTICLE_LIST_DATA_SUCCESS,
-    FETCH_ARTICLE_LIST_DATA_FAIL,
-    FETCH_ARTICLE_DETAIL_SUCCESS,
-    CREATE_ARTICLE,
-    CREATE_ARTICLE_SUCCESS,
-    CREATE_ARTICLE_FAIL
+    FETCH_COURSE_LIST_DATA,
+    FETCH_COURSE_LIST_DATA_SUCCESS,
+    FETCH_COURSE_LIST_DATA_FAIL,
+
+    FETCH_COURSE_DETAIL,
+    FETCH_COURSE_DETAIL_SUCCESS,
+    FETCH_COURSE_DETAIL_FAIL,
+
+    CREATE_COURSE,
+    CREATE_COURSE_SUCCESS,
+    CREATE_COURSE_FAIL
 } from 'redux/action-types';
 
 let defaultState = I.fromJS({
     list: [],
     isFetching: false,
+    course: {},
     creating: false
 });
 
 export default createReducer(I.fromJS(defaultState), {
-    [FETCH_ARTICLE_LIST_DATA](state, action) {
+    [FETCH_COURSE_LIST_DATA](state, action) {
         return state.set('isFetching', true);
     },
-    [FETCH_ARTICLE_LIST_DATA_SUCCESS](state, action) {
+    [FETCH_COURSE_LIST_DATA_SUCCESS](state, action) {
         return state.set('list', I.fromJS(action.result)).set('isFetching', false);
     },
 
-    [FETCH_ARTICLE_DETAIL_SUCCESS](state, action) {
-        if (action.result[0]) {
-            return state.set('detail', I.fromJS(action.result[0]));
-        }
-        return state;
+    [FETCH_COURSE_DETAIL_SUCCESS](state, action) {
+        console.log('FETCH_COURSE_DETAIL_SUCCESS', action);
+        return state.set('course', I.fromJS(action.result));
     },
-    [CREATE_ARTICLE](state, action) {
+
+    [CREATE_COURSE](state, action) {
         return state.set('creating', true);
     },
-    [CREATE_ARTICLE_SUCCESS](state, action) {
+    [CREATE_COURSE_SUCCESS](state, action) {
         message.success('添加成功');
         return state.set('creating', false);
     },
-    [CREATE_ARTICLE_FAIL](state, action) {
+    [CREATE_COURSE_FAIL](state, action) {
         message.warning('添加失败');
         return state.set('creating', false);
     }
@@ -50,11 +54,11 @@ export default createReducer(I.fromJS(defaultState), {
 
 export function fetch() {
     return {
-        types: [FETCH_ARTICLE_LIST_DATA, FETCH_ARTICLE_LIST_DATA_SUCCESS, FETCH_ARTICLE_LIST_DATA_FAIL],
+        types: [FETCH_COURSE_LIST_DATA, FETCH_COURSE_LIST_DATA_SUCCESS, FETCH_COURSE_LIST_DATA_FAIL],
         promise: () => {
             return new Promise((resolve, reject) => {
                 ajax({
-                    url: '/article/all',
+                    url: '/course/all',
                     type: 'GET',
                     data: {
                         offset: 0,
@@ -70,11 +74,11 @@ export function fetch() {
 
 export function create(params) {
     return {
-        types: [CREATE_ARTICLE, CREATE_ARTICLE_SUCCESS, CREATE_ARTICLE_FAIL],
+        types: [CREATE_COURSE, CREATE_COURSE_SUCCESS, CREATE_COURSE_FAIL],
         promise: () => {
             return new Promise((resolve, reject) => {
                 ajax({
-                    url: '/article/create',
+                    url: '/course/create',
                     type: 'POST',
                     data: params,
                     success: response => resolve(response),
@@ -87,14 +91,14 @@ export function create(params) {
 
 export function fetchOne(id) {
     return {
-        types: [FETCH_ARTICLE_DETAIL, FETCH_ARTICLE_DETAIL_SUCCESS, FETCH_ARTICLE_DETAIL_FAIL],
+        types: [FETCH_COURSE_DETAIL, FETCH_COURSE_DETAIL_SUCCESS, FETCH_COURSE_DETAIL_FAIL],
         promise: () => {
             return new Promise((resolve, reject) => {
                 ajax({
-                    url: '/article/query',
-                    type: 'GET',
+                    url: `/course/${id}/detail`,
+                    type: 'POST',
                     data: {
-                        id: parseInt(id)
+                        id
                     },
                     success: response => resolve(response),
                     error: error => reject(error)
@@ -106,11 +110,11 @@ export function fetchOne(id) {
 
 export function update(params) {
     return {
-        types: [UPDATE_ARTICLE, UPDATE_ARTICLE_SUCCESS, UPDATE_ARTICLE_FAIL],
+        types: [UPDATE_COURSE, UPDATE_COURSE_SUCCESS, UPDATE_COURSE_FAIL],
         promise: () => {
             return new Promise((resolve, reject) => {
                 ajax({
-                    url: '/article/update',
+                    url: '/COURSE/update',
                     type: 'POST',
                     data: params,
                     success: response => resolve(response),
@@ -123,11 +127,11 @@ export function update(params) {
 
 export function deleteOne(id) {
     return {
-        types: [DELETE_ARTICLE, DELETE_ARTICLE_SUCCESS, DELETE_ARTICLE_FAIL],
+        types: [DELETE_COURSE, DELETE_COURSE_SUCCESS, DELETE_COURSE_FAIL],
         promise: () => {
             return new Promise((resolve, reject) => {
                 ajax({
-                    url: '/article/delete',
+                    url: '/COURSE/delete',
                     type: 'POST',
                     data: {
                         id: parseInt(id)

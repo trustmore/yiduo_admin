@@ -1,20 +1,20 @@
 export default {
-    path: 'article',
+    path: 'course',
     indexRoute: {
         onEnter: () => {},
-        component: require('components/article')
+        component: require('components/course')
     },
     childRoutes: [
         {
             path: 'add',
             onEnter: () => {},
-            component: require('components/article/add')
+            component: require('components/course/add')
+        },
+        {
+            path: ':id/edit',
+            onEnter: () => {},
+            component: require('components/course/add')
         }
-        // {
-        //     path: 'detail(/:id)',
-        //     onEnter: () => {},
-        //     component: require('components/account/account-detail')
-        // },
         // {
         //     path: 'edit(/:id)',
         //     onEnter: () => {},

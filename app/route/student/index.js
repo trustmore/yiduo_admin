@@ -9,12 +9,12 @@ export default {
             path: 'add',
             onEnter: () => {},
             component: require('components/student/add')
+        },
+        {
+            path: ':id',
+            onEnter: () => {},
+            component: require('components/student/detail')
         }
-        // {
-        //     path: 'detail(/:id)',
-        //     onEnter: () => {},
-        //     component: require('components/account/account-detail')
-        // },
         // {
         //     path: 'edit(/:id)',
         //     onEnter: () => {},

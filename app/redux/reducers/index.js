@@ -4,7 +4,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import student from './student';
 import clazz from './clazz';
 import teacher from './teacher';
-import article from './article';
+import course from './course';
 import user from './user';
 
 let initialState = I.fromJS({
@@ -13,6 +13,7 @@ let initialState = I.fromJS({
 
 let router = (state = initialState, action) => {
     if (action.type === LOCATION_CHANGE) {
+        console.log('LOCATION_CHANGE action.payload', action.payload);
         return state.merge({
             locationBeforeTransitions: action.payload
         });
@@ -26,6 +27,6 @@ export default combineReducers({
     student,
     teacher,
     clazz,
-    article,
+    course,
     user
 });

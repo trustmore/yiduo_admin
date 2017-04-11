@@ -30,7 +30,7 @@ import {
 let defaultState = I.fromJS({
     list: [],
     isFetching: false,
-    detail: null,
+    detail: {},
     creating: false
 });
 
@@ -41,10 +41,7 @@ export default createReducer(I.fromJS(defaultState), {
     [FETCH_STUDENT_LIST_DATA_SUCCESS](state, action) {
         return state.set('list', I.fromJS(action.result)).set('isFetching', false);
     },
-    [FETCH_STUDENT_DETAIL_SUCCESS](state, action) {
-        if (action.result[0]) {
-            return state.set('detail', I.fromJS(action.result[0]));
-        }
+    [FETCH_STUDENT_LIST_DATA_FAIL](state, action) {
         return state;
     },
 
@@ -71,6 +68,17 @@ export default createReducer(I.fromJS(defaultState), {
         }));
     },
     [DELETE_STUDENT_FAIL](state, action) {
+        return state;
+    },
+
+    [FETCH_STUDENT_DETAIL](state, action) {
+        return state;
+    },
+    [FETCH_STUDENT_DETAIL_SUCCESS](state, action) {
+        console.log('FETCH_STUDENT_DETAIL_SUCCESS', action.result);
+        return state.set('detail', I.fromJS(action.result));
+    },
+    [FETCH_STUDENT_DETAIL_FAIL](state, action) {
         return state;
     }
 });
@@ -118,10 +126,10 @@ export function fetchOne(id) {
         promise: () => {
             return new Promise((resolve, reject) => {
                 ajax({
-                    url: '/student/query',
-                    type: 'GET',
+                    url: `/student/${id}/detail`,
+                    type: 'POST',
                     data: {
-                        id: parseInt(id)
+                        id
                     },
                     success: response => resolve(response),
                     error: error => reject(error)
