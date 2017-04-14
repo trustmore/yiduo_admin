@@ -1,3 +1,15 @@
+//说明
+// sentences为句子列表，结构为：
+// sentences = [{
+//     _id: //编辑时的句子 ID
+//     key: 10,
+//     content: '句子内容',
+//     voice: {
+//         _id
+//         path
+//         filename
+//     }
+// }]
 import React, { Component, PropTypes } from 'react';
 import { Form, Input, Button, Radio, Select, Icon, Upload, message } from 'antd';
 import { getToken } from '../../utils/request';
@@ -7,7 +19,6 @@ const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
-let uuid = 0;
 
 class AddCourseForm extends Component {
     static propTypes = {
@@ -16,72 +27,102 @@ class AddCourseForm extends Component {
     };
     constructor(props) {
         super(props);
-        this.state = {
+        let course = props.course ? props.course.toJS() : {};
+        console.log('AddCourseForm', props);
+        //需要处理 sentences 的 key 和 uuid
+        if (course.sentences && course.sentences.length > 0) {
+            course.uuid = course.sentences.length - 1;
+        }
+        this.state = Object.assign({}, {
             type: "recite",
-            score: "5",
-            scoreList: [0, 1, 2, 3, 4, 5]
-        };
+            scoreNotes: [],
+            score: 5,
+            uuid: 0
+        }, course);
+    }
+    componentDidMount() {
+        let course = this.props.course ? this.props.course.toJS() : {};
+        console.log('componentDidMount', course);
+        if (course.sentences && course.sentences.length > 0) {
+            course.sentences.map((t, index) => {
+                t.key = index;
+            });
+            this.props.form.setFieldsValue({sentences: course.sentences});
+        }
     }
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
-                console.log('props: ', this.props);
                 let voiceUploaded = true;
-                for (let key in values) {
-                    if (key.match(/^sentence-/)) {
-                        let voiceKey = key.replace(/^sentence-/, 'voice-');
-                        if (!this.props.voice[voiceKey]) {
-                            voiceUploaded = false;
-                        }
+                const sentences = this.props.form.getFieldValue('sentences');
+                sentences.map(s => {
+                    if (!s.voice) {
+                        voiceUploaded = false;
                     }
-                }
+                });
                 if (!voiceUploaded) {
                     message.warn('请上传相应语音');
                     return false;
-                } else {
-                    for (let key in this.props.voice) {
-                        values[key] = this.props.voice[key];
-                    }
                 }
+                values.sentences = sentences;
                 this.props.onSubmit(values);
             }
         });
     }
-    onSenRemove = (k) => {
+    onSenRemove = (key) => {
         const { form } = this.props;
-        const keys = form.getFieldValue('keys');
-        if (keys.length === 1) {
+        const sentences = form.getFieldValue('sentences');
+        if (sentences.length === 1) {
             return;
         }
         form.setFieldsValue({
-            keys: keys.filter(key => key !== k)
+            sentences: sentences.filter(k => k.key !== key)
         });
-        delete this.props.voice[`voice-${k}`];
     }
     onSenAdd = () => {
-        uuid++;
+        this.state.uuid++;
         const { form } = this.props;
-        const keys = form.getFieldValue('keys');
-        const nextKeys = keys.concat(uuid);
-        console.log('add==>', keys, nextKeys);
+        const sentences = form.getFieldValue('sentences') || [];
+        console.log('uuid', this.state.uuid);
+        sentences.push({
+            key: this.state.uuid,
+            content: ''
+        });
         form.setFieldsValue({
-            keys: nextKeys,
+            sentences
         });
     }
     onTypeChange = (e) => {
+        console.log('onTypeChange', e.target.value);
         this.setState({
             type: e.target.value
         });
     }
     onScoreChange = (value) => {
-        console.log(value);
-        let scoreList = parseInt(value) === 5 ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5, 6];
         this.setState({
-            score: value,
-            scoreList
+            score: parseInt(value)
         });
+    }
+    _onUploadSuccess = (key, obj) => {
+        const sentences = this.props.form.getFieldValue('sentences');
+        sentences.find(s => { return s.key === key; }).voice = {
+            _id: obj.response.id,
+            filename: obj.name
+        };
+        console.log('_onUploadSuccess', key, sentences);
+        this.props.form.setFieldsValue({
+            sentences
+        });
+    }
+    onSenChange = (e, key) => {
+        const sentences = this.props.form.getFieldValue('sentences');
+        sentences.find(s => { return s.key === key; }).content = e.target.value;
+        console.log('onSenChange', e.target.value, sentences);
+        this.props.form.setFieldsValue({
+            sentences
+        });
+
     }
     _renderName = () => {
         const { getFieldDecorator } = this.props.form;
@@ -91,6 +132,7 @@ class AddCourseForm extends Component {
                 label="课程名称"
                 hasFeedback >
                 {getFieldDecorator('name', {
+                    initialValue: this.state.name,
                     rules: [{
                         pattern: /\S+/,
                         message: '请填写文章名称'
@@ -111,7 +153,7 @@ class AddCourseForm extends Component {
                 {...formItemLayout}
                 label="总分" >
                 {getFieldDecorator('score', {
-                    initialValue: this.state.score,
+                    initialValue: this.state.score.toString(),
                     onChange: this.onScoreChange,
                     rules: [{
                         pattern: /^[5-6]$/,
@@ -163,7 +205,9 @@ class AddCourseForm extends Component {
                 {...formItemLayout}
                 label="相关文章"
                 hasFeedback >
-                {getFieldDecorator('article')(
+                {getFieldDecorator('article', {
+                    initialValue: this.state.article,
+                })(
                     <Input type='textarea' placeholder="相关文章" style={{}} />
                 )}
             </FormItem>
@@ -171,9 +215,9 @@ class AddCourseForm extends Component {
     }
     _renderScoreNote = () => {
         const { getFieldDecorator, getFieldValue } = this.props.form;
-        return this.state.scoreList.map((k) => {
+        return [...Array(this.state.score + 1).keys()].map((k) => {
             let skey = `score-${k}`;
-            let label = k === 0 ? "分值提醒" : "  ";
+            let label = k === 0 ? "分值提示" : "  ";
             return (
                 <FormItem
                     {...formItemLayout}
@@ -181,6 +225,7 @@ class AddCourseForm extends Component {
                     key={skey} >
                     {getFieldDecorator(`sn-${k}`, {
                         validateTrigger: ['onChange', 'onBlur'],
+                        initialValue: this.state.scoreNotes[k],
                         rules: [{
                             required: true,
                             whitespace: true,
@@ -215,54 +260,70 @@ class AddCourseForm extends Component {
         if (this.state.type !== 'preview') {
             return null;
         }
-        getFieldDecorator('keys', { initialValue: [] });
-        const keys = getFieldValue('keys');
+        getFieldDecorator('sentences', { initialValue: [] });
+        const sentences = getFieldValue('sentences');
         const uplaodDefaultProps = {
             name: 'file',
             action: '/api/upload/voice',
             headers: {
                 authorization: getToken(),
             },
-            defaultFileList: []
         };
-        return keys.map((k, index) => {
-            let voice = `voice-${k}`;
-            let uplaodProps = Object.assign({
+        console.log('_renderSentences', sentences);
+        return sentences.map((k, index) => {
+            console.log('_renderSentences key', k.key);
+            let voice = `voice-${k.key}`;
+            let up = {
                 voice,
                 key: voice,
+                defaultFileList: [],
                 onChange: (info) => {
                     if (info.file.status !== 'uploading') {
                         console.log(info.file, info.fileList);
                     }
                     if (info.file.status === 'done') {
                         message.success(`${info.file.name} 上传成功`);
-                        this.props.voice[voice] = info.file.response.id;
+                        this._onUploadSuccess(k.key, info.file);
                     } else if (info.file.status === 'error') {
                         message.error(`${info.file.name} 上传失败`);
                     }
                 }
-            }, uplaodDefaultProps);
+            };
+            if (k.voice) {
+                up.defaultFileList = [{
+                      uid: voice,
+                      name: k.voice.filename,
+                      status: 'done',
+                      url: '#',
+                }];
+            }
+            let uplaodProps = Object.assign(up, uplaodDefaultProps);
+            console.log('uplaodProps', uplaodProps);
             return (
                 <FormItem
                     {...formItemLayout}
                     label={`句子${index+1}`}
                     required={false}
-                    key={k} >
-                    {getFieldDecorator(`sentence-${k}`, {
+                    key={k.key} >
+                    {getFieldDecorator(`sentence-${k.key}`, {
+                        initialValue: k.content,
                         validateTrigger: ['onChange', 'onBlur'],
+                        onChange: (e) => {
+                            this.onSenChange(e, k.key);
+                        },
                         rules: [{
                             required: true,
                             whitespace: true,
                             message: "请输入句子内容",
-                        }],
+                        }]
                     })(
                         <Input type='textarea' placeholder="句子" style={{ width: '60%', marginRight: 8 }} />
                     )}
                     <Icon
                         className="dynamic-delete-button"
                         type="minus-circle-o"
-                        disabled={keys.length === 1}
-                        onClick={() => this.onSenRemove(k)}
+                        disabled={sentences.length === 1}
+                        onClick={() => this.onSenRemove(k.key)}
                     />
                     <br></br>
                     <Upload {...uplaodProps}>
@@ -275,6 +336,7 @@ class AddCourseForm extends Component {
         });
     }
     render() {
+        let btnText = this.props.edit ? '修改' : '添加';
         return (
             <Form onSubmit={this.handleSubmit}>
                 {this._renderName()}
@@ -285,7 +347,7 @@ class AddCourseForm extends Component {
                 {this._renderSentences()}
                 {this._renderAddBtn()}
                 <FormItem {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit" size="large">添加</Button>
+                    <Button type="primary" htmlType="submit" size="large">{btnText}</Button>
                 </FormItem>
             </Form>
         );

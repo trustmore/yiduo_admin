@@ -13,7 +13,6 @@ let initialState = I.fromJS({
 
 let router = (state = initialState, action) => {
     if (action.type === LOCATION_CHANGE) {
-        console.log('LOCATION_CHANGE action.payload', action.payload);
         return state.merge({
             locationBeforeTransitions: action.payload
         });

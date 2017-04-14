@@ -1,10 +1,10 @@
 // import {push} from 'react-router-redux';
 import React, { Component, PropTypes } from 'react';
-import {Link} from 'react-router';
+import {Link, browserHistory} from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Icon } from 'antd';
-import { fetch } from 'redux/reducers/course';
+import { fetch, fetchOne } from 'redux/reducers/course';
 
 import style from 'styles/modules/home/home.scss';
 
@@ -13,12 +13,13 @@ import style from 'styles/modules/home/home.scss';
         isFetching: state.getIn(['course', 'isFetching']),
         courseList: state.getIn(['course', 'list'])
     }),
-    dispatch => bindActionCreators({fetch}, dispatch)
+    dispatch => bindActionCreators({fetch, fetchOne}, dispatch)
 )
 export default class CourseList extends Component {
     static propTypes = {
         courseList: PropTypes.object,
-        isFetching: PropTypes.object
+        isFetching: PropTypes.object,
+        fetchOne: PropTypes.func
     };
     constructor(props) {
         super(props);
@@ -35,13 +36,22 @@ export default class CourseList extends Component {
             );
         }
     }
+    linkToAdd(e, id, edit) {
+        e.preventDefault();
+        let url = edit ? `/course/add?id=${id}&edit=true` : `/course/add?id=${id}`;
+        this.props.fetchOne(id).then(ret => {
+            if (ret && ret.type === 'success') {
+                browserHistory.push(url);
+            }
+        });
+    }
     _renderCourseList() {
         const columns = [
             {
                 title: '名称',
                 dataIndex: 'name',
                 key: 'name',
-                render: (text, i) => <Link to={`/course/${i._id}/edit`}>{text}</Link>
+                render: (text, i) => <Link to={`/course/${i._id}`}>{text}</Link>
             },
             {
                 title: '句子数',
@@ -52,33 +62,28 @@ export default class CourseList extends Component {
             {
                 title: '操作',
                 key: 'action',
-                render: (text, s) => (
+                render: (text, i) => (
                     <span>
-                        <a href="#">详情</a>
+                        <a href='#' onClick={(e) => this.linkToAdd(e, i._id, true)}>编辑</a>
                         <span className="ant-divider" />
-                        <a href="#">删除</a>
-                        <span className="ant-divider" />
-                        <a href="#" className="ant-dropdown-link">
-                        更多 <Icon type="down" />
-                        </a>
+                        <a href='#' onClick={(e) => this.linkToAdd(e, i._id)}>复制并添加课程</a>
                     </span>
                 )
             }
         ];
         let dataList = [];
         if (this.props.courseList) {
-            let courseList = this.props.courseList.toArray();
+            let courseList = this.props.courseList.toJS();
             courseList.map((t, i) => {
                 let tmp = {
-                    key: t.get('_id'),
-                    _id: t.get('_id'),
-                    name: t.get('name'),
-                    sentence: 9
+                    key: t['_id'],
+                    _id: t['_id'],
+                    name: t['name'],
+                    sentence: 0
                 };
                 dataList.push(tmp);
             })
         }
-        console.log('dataList xxxx=>', dataList);
         return (
             <Table columns={columns} defaultPageSize={20} pagination={{defaultCurrent: 1, total: 50}} dataSource={dataList} />
         );
@@ -90,7 +95,7 @@ export default class CourseList extends Component {
                     <h1>course</h1>
                     <Link to="/course/add">
                         <Icon type="user-add" />
-                        <span>添加文章</span>
+                        <span>添加新课程</span>
                     </Link>
                 </div>
                 { this._renderLoading() }

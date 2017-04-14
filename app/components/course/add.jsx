@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { create, fetchOne } from 'redux/reducers/course';
+import { create, fetchOne, update } from 'redux/reducers/course';
 import AddCourseForm from './addCourseForm';
 
 @connect(
@@ -11,7 +11,7 @@ import AddCourseForm from './addCourseForm';
         clazzList: state.getIn(['clazz', 'list']),
         course: state.getIn(['course', 'course'])
     }),
-    dispatch => bindActionCreators({create, fetchOne}, dispatch)
+    dispatch => bindActionCreators({create, fetchOne, update}, dispatch)
 )
 export default class StudentAdd extends Component {
     static propTypes = {
@@ -19,27 +19,28 @@ export default class StudentAdd extends Component {
         course: PropTypes.object,
         edit: PropTypes.bool,
         isFetching: PropTypes.bool,
-        create: PropTypes.func
+        create: PropTypes.func,
+        update: PropTypes.func
     };
     constructor(props) {
         super(props);
-        let id = props.params.id
-        let edit = id ? true : false;
+        let id = this.props.location.query.id;
+        let edit = this.props.location.query.edit ? true : false;
         let isFetching = edit ? true : false;
         this.state = {
+            id,
             edit,
             isFetching
         };
     }
     componentDidMount() {
-        console.log('course add', this.state);
-        if (this.state.edit) {
-            this.props.fetchOne(this.props.params.id).then(ret => {
-                this.setState({
-                    isFetching: false
-                })
-            });
-        }
+        // if (this.state.id) {
+        //     this.props.fetchOne(this.state.id).then(ret => {
+        //         this.setState({
+        //             isFetching: false
+        //         });
+        //     });
+        // }
     }
     _renderLoading() {
         if (this.props.isFetching) {
@@ -49,25 +50,44 @@ export default class StudentAdd extends Component {
         }
     }
     _handleAddSubmit = (values) => {
-        console.log('_handleAddSubmit=>', values, this.props.from);
-        this.props.create(values).then(ret => {
-            console.log('create===>', ret);
-            if (ret && ret.type === 'success') {
-                browserHistory.push('/course');
-            }
-        });
+        console.log('submit values', values);
+        if (values.sentences && values.sentences.length > 1){
+            let sentences = values.sentences;
+            sentences.map((s, index) => {
+                values[`voice-${index}`] = s.voice._id;
+            });
+            delete values.sentences;
+        }
+        console.log('submit values', values);
+        if (this.state.edit) {
+            values._id = this.state.id;
+            this.props.update(values).then(ret => {
+                if (ret && ret.type === 'success') {
+                    browserHistory.push('/course');
+                }
+            });
+        } else {
+            this.props.create(values).then(ret => {
+                if (ret && ret.type === 'success') {
+                    browserHistory.push('/course');
+                }
+            });
+        }
     }
     render() {
+        console.log('add render');
         if (this.props.isFetching) {
             return (
                 <div>稍等...</div>
             );
         }
+        let hText = this.state.edit ? '修改课程' : '添加课程';
+        let course = this.state.id ? this.props.course : null;
         return (
             <div>
                 <div>
-                    <h1>添加课程</h1>
-                    <AddCourseForm course={this.props.course} onSubmit={this._handleAddSubmit} />
+                    <h1>{hText}</h1>
+                    <AddCourseForm edit={this.state.edit} course={course} onSubmit={this._handleAddSubmit} />
                 </div>
             </div>
         );

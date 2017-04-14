@@ -1,6 +1,6 @@
 
 import I from 'immutable';
-import { createReducer } from 'redux/creator';
+import { createReducer, createAction } from 'redux/creator';
 import { message } from 'antd';
 import { browserHistory } from 'react-router';
 
@@ -16,7 +16,13 @@ import {
 
     CREATE_COURSE,
     CREATE_COURSE_SUCCESS,
-    CREATE_COURSE_FAIL
+    CREATE_COURSE_FAIL,
+
+    UPDATE_COURSE,
+    UPDATE_COURSE_SUCCESS,
+    UPDATE_COURSE_FAIL,
+
+    REMOVE_CACHE_COURSE
 } from 'redux/action-types';
 
 let defaultState = I.fromJS({
@@ -49,8 +55,26 @@ export default createReducer(I.fromJS(defaultState), {
     [CREATE_COURSE_FAIL](state, action) {
         message.warning('添加失败');
         return state.set('creating', false);
+    },
+
+    [UPDATE_COURSE](state, action) {
+        return state;
+    },
+    [UPDATE_COURSE_SUCCESS](state, action) {
+        message.success('修改成功');
+        return state;
+    },
+    [UPDATE_COURSE_FAIL](state, action) {
+        message.warning('修改失败');
+        return state;
+    },
+
+    [REMOVE_CACHE_COURSE](state, action) {
+        return state.set('course', I.fromJS({}));
     }
 });
+
+export const removeCacheCourse = createAction(REMOVE_CACHE_COURSE, 'payload');
 
 export function fetch() {
     return {
@@ -114,7 +138,7 @@ export function update(params) {
         promise: () => {
             return new Promise((resolve, reject) => {
                 ajax({
-                    url: '/COURSE/update',
+                    url: '/course/update',
                     type: 'POST',
                     data: params,
                     success: response => resolve(response),
