@@ -12,6 +12,9 @@ import {
     CREATE_TEACHER,
     CREATE_TEACHER_SUCCESS,
     CREATE_TEACHER_FAIL,
+    UPDATE_TEACHER,
+    UPDATE_TEACHER_SUCCESS,
+    UPDATE_TEACHER_FAIL,
     DELETE_TEACHER,
     DELETE_TEACHER_SUCCESS,
     DELETE_TEACHER_FAIL
@@ -45,6 +48,12 @@ export default createReducer(I.fromJS(defaultState), {
     },
     [CREATE_TEACHER_FAIL](state, action) {
         return state;
+    },
+
+    [UPDATE_TEACHER_SUCCESS](state, action) {
+        message.success('修改成功');
+        var index = state.get('list').findIndex( item => item.get("_id") == action.result._id );
+        return state.setIn(['list', index], I.fromJS(action.result));
     },
 
     [DELETE_TEACHER](state, action) {
@@ -89,6 +98,23 @@ export function create(params) {
             return new Promise((resolve, reject) => {
                 ajax({
                     url: '/teacher/create',
+                    type: 'POST',
+                    data: params,
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function update(params) {
+    return {
+        types: [UPDATE_TEACHER, UPDATE_TEACHER_SUCCESS, UPDATE_TEACHER_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: '/teacher/update',
                     type: 'POST',
                     data: params,
                     success: response => resolve(response),

@@ -6,6 +6,16 @@ export default {
     },
     childRoutes: [
         {
+            path: ':id/detail',
+            onEnter: () => {},
+            component: require('components/clazz/detail')
+        },
+        {
+            path: ':id/schedule',
+            onEnter: () => {},
+            component: require('components/clazz/schedule')
+        },
+        {
             path: 'add',
             onEnter: () => {},
             component: require('components/clazz/add')

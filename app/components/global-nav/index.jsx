@@ -62,12 +62,6 @@ export default class GlobalNav extends Component {
                             <span className="nav-text">课程</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="sub6">
-                        <Link activeClassName="active" to="/parent">
-                            <Icon type="mail" />
-                            <span className="nav-text">家长</span>
-                        </Link>
-                    </Menu.Item>
                 </Menu>
             </div>
         );

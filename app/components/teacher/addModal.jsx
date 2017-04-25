@@ -8,37 +8,44 @@ import { formItemLayout, tailFormItemLayout } from '../../utils/component-config
 
 class AddTeacherForm extends Component {
     static propTypes = {
-        onSubmit: PropTypes.func,
-        clazzList: PropTypes.object,
         visible: PropTypes.bool,
-        onCancel: PropTypes.func,
-        onOk: PropTypes.func
+        edit: PropTypes.bool,
+        currentTea: PropTypes.object,
+        onOk: PropTypes.func,
+        onCancel: PropTypes.func
     };
     handleSubmit = (e) => {
         e.preventDefault();
+        console.log('====', this.props);
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
-                this.props.onSubmit(values);
+                this.props.onOk(values);
             }
         });
     }
     render() {
         const { getFieldDecorator } = this.props.form;
+        let currentTea = this.props.currentTea;
+        let name = this.props.edit ? currentTea.name : undefined;
+        let fname = this.props.edit ? currentTea.fname : undefined;
+        let ename = this.props.edit ? currentTea.ename : undefined;
+        let sex = this.props.edit ? currentTea.sex : 'm';
+        let okText = this.props.edit ? '修改' : '添加';
         return (
             <Modal
               visible={this.props.visible}
               title="姓名"
-              okText="添加"
+              okText={okText}
               onCancel={this.props.onCancel}
-              onOk={this.props.onOk}
+              onOk={this.handleSubmit}
             >
-                <Form onSubmit={this.handleSubmit}>
+                <Form>
                     <FormItem
                         {...formItemLayout}
                         label="姓名"
                         hasFeedback >
                         {getFieldDecorator('name', {
+                            initialValue: name,
                             rules: [{
                                 pattern: /\S+/,
                                 message: '请填写老师名字'
@@ -55,6 +62,7 @@ class AddTeacherForm extends Component {
                         label="姓"
                         hasFeedback >
                         {getFieldDecorator('fname', {
+                            initialValue: fname,
                             rules: [{
                                 pattern: /\S+/,
                                 message: '请填写老师姓氏'
@@ -71,6 +79,7 @@ class AddTeacherForm extends Component {
                         label="英文名"
                         hasFeedback >
                         {getFieldDecorator('ename', {
+                            initialValue: ename,
                             rules: [{
                                 pattern: /\S+/,
                                 message: '请填写英文名'
@@ -86,7 +95,7 @@ class AddTeacherForm extends Component {
                         {...formItemLayout}
                         label="性别" >
                         {getFieldDecorator('sex', {
-                            initialValue: 'm'
+                            initialValue: sex
                         })(
                             <RadioGroup>
                                 <Radio value="m">男</Radio>
@@ -103,12 +112,11 @@ const AddForm = Form.create()(AddTeacherForm);
 
 export default class AddModal extends Component {
     static propTypes = {
-        onSubmit: PropTypes.func,
-        handleOk: PropTypes.func,
-        handleCancel: PropTypes.func,
-        closeModal: PropTypes.func,
-        clazzList: PropTypes.object,
-        visible: PropTypes.bool
+        visible: PropTypes.bool,
+        edit: PropTypes.bool,
+        currentTea: PropTypes.object,
+        onOk: PropTypes.func,
+        onCancel: PropTypes.func
     };
     constructor(props) {
         super(props);
@@ -121,21 +129,21 @@ export default class AddModal extends Component {
             this.props.onSubmit(values);
         });
     }
-    handleCancel = () => {
-        this.props.closeModal();
-    }
     saveFormRef = (form) => {
         this.form = form;
     }
     render() {
+        if (!this.props.visible) {
+            return null;
+        }
         return (
             <AddForm
                 ref={this.saveFormRef}
                 visible={this.props.visible}
-                onCancel={this.handleCancel}
-                onOk={this.handleOk}
-                onSubmit={this.props.handleOk}
-                clazzList={this.props.clazzList}
+                edit={this.props.edit}
+                currentTea={this.props.currentTea}
+                onOk={this.props.onOk}
+                onCancel={this.props.onCancel}
             />
         );
     }

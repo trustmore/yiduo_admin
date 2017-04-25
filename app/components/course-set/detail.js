@@ -25,6 +25,11 @@ export default class CsDetail extends Component {
         this.state = {
         };
     }
+    componentWillMount() {
+        if (!this.props.cs) {
+            browserHistory.push('/cs');
+        }
+    }
     componentDidMount() {
     }
     onSortEnd = (items) => {

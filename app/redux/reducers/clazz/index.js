@@ -11,6 +11,12 @@ import {
     CREATE_CLAZZ,
     CREATE_CLAZZ_SUCCESS,
     CREATE_CLAZZ_FAIL,
+    FETCH_CLAZZ_DETAIL,
+    FETCH_CLAZZ_DETAIL_SUCCESS,
+    FETCH_CLAZZ_DETAIL_FAIL,
+    FETCH_CLAZZ_SCHEDULE,
+    FETCH_CLAZZ_SCHEDULE_SUCCESS,
+    FETCH_CLAZZ_SCHEDULE_FAIL,
     UPDATE_CLAZZ,
     UPDATE_CLAZZ_SUCCESS,
     UPDATE_CLAZZ_FAIL
@@ -18,6 +24,8 @@ import {
 
 let defaultState = I.fromJS({
     list: [],
+    detail: {},
+    schedule: {},
     isFetching: false
 });
 
@@ -32,15 +40,18 @@ export default createReducer(I.fromJS(defaultState), {
         return state.set('isFetching', false);
     },
     [CREATE_CLAZZ_SUCCESS](state, action) {
-        console.log('CREATE_CLAZZ_SUCCESS', action);
         const tlist = state.get('list');
         return state.set('cs', tlist.push(I.fromJS(action.result)));
     },
+    [FETCH_CLAZZ_DETAIL_SUCCESS](state, action) {
+        return state.set('detail', I.fromJS(action.result));
+    },
+    [FETCH_CLAZZ_SCHEDULE_SUCCESS](state, action) {
+        return state.set('schedule', I.fromJS(action.result));
+    },
     [UPDATE_CLAZZ_SUCCESS](state, action) {
-        console.log('UPDATE_CLAZZ_SUCCESS', action);
         message.success('修改成功');
         var index = state.get('list').findIndex( item => item.get("_id") === action.result._id );
-        console.log('reducers', index, action.result);
         return state.setIn(['list', index], I.fromJS(action.result));
     }
 });
@@ -56,6 +67,44 @@ export function fetch() {
                     data: {
                         offset: 0,
                         limit: 15
+                    },
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function fetchDetail(id) {
+    return {
+        types: [FETCH_CLAZZ_DETAIL, FETCH_CLAZZ_DETAIL_SUCCESS, FETCH_CLAZZ_DETAIL_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: `/clazz/${id}/detail`,
+                    type: 'POST',
+                    data: {
+                        _id: id
+                    },
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function fetchSchedule(id) {
+    return {
+        types: [FETCH_CLAZZ_SCHEDULE, FETCH_CLAZZ_SCHEDULE_SUCCESS, FETCH_CLAZZ_SCHEDULE_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: `/clazz/${id}/schedule`,
+                    type: 'POST',
+                    data: {
+                        _id: id
                     },
                     success: response => resolve(response),
                     error: error => reject(error)

@@ -105,9 +105,7 @@ export default class CsList extends Component {
                     <span>
                         <a href='#'>编辑</a>
                         <span className="ant-divider" />
-                        <a href='#'>删除</a>
-                        <span className="ant-divider" />
-                        <a href='#' onClick={(e) => this.showAddCourseModal(e, i._id)}>添加课程</a>
+                        <a href='#' onClick={(e) => this.showAddCourseModal(e, i._id)}>编辑课程</a>
                     </span>
                 )
             }
@@ -126,7 +124,7 @@ export default class CsList extends Component {
             });
         }
         return (
-            <Table columns={columns} defaultPageSize={20} pagination={{defaultCurrent: 1, total: 50}} dataSource={dataList} />
+            <Table columns={columns} pagination={false} dataSource={dataList} />
         );
     }
     render() {

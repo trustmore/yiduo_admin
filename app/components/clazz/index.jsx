@@ -1,10 +1,10 @@
 // import {push} from 'react-router-redux';
 import React, { Component, PropTypes } from 'react';
-import {Link} from 'react-router';
+import {browserHistory, Link} from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Icon } from 'antd';
-import { create, update } from 'redux/reducers/clazz';
+import { create, update, fetchDetail, fetchSchedule } from 'redux/reducers/clazz';
 import { create as createStudent } from 'redux/reducers/student';
 import AddModal from './AddModal';
 import AddStudentModal from '../student/AddModal';
@@ -17,7 +17,7 @@ import style from 'styles/modules/home/home.scss';
         cs: state.getIn(['cs', 'cs']),
         teacherList: state.getIn(['teacher', 'list'])
     }),
-    dispatch => bindActionCreators({create, update, createStudent}, dispatch)
+    dispatch => bindActionCreators({create, update, createStudent, fetchDetail, fetchSchedule}, dispatch)
 )
 export default class Student extends Component {
     static propTypes = {
@@ -27,7 +27,6 @@ export default class Student extends Component {
     };
     constructor(props) {
         super(props);
-        console.log('constructor', props.teacherList);
         this.state = {
             edit: false,
             visible: false,
@@ -49,7 +48,6 @@ export default class Student extends Component {
         let currentClazz = this.props.clazzList.find((c) => {
             return c.get('_id') === cid;
         }).toJS();
-        console.log('openEditModal', cid, currentClazz);
         this.setState({
             visible: true,
             asVisible: false,
@@ -85,7 +83,6 @@ export default class Student extends Component {
         });
     }
     handleSubmit = (values) => {
-        console.log('submit values', values);
         if (this.state.edit){
             values.cid = this.state.currentClazz._id;
             this.props.update(values).then(ret => {
@@ -108,13 +105,25 @@ export default class Student extends Component {
             });
         });
     }
+    linkToSchedule(e, id) {
+        e.preventDefault();
+        this.props.fetchSchedule(id).then(ret => {
+            browserHistory.push(`/clazz/${id}/schedule`);
+        });
+    }
+    linkToDetail(e, id) {
+        e.preventDefault();
+        this.props.fetchDetail(id).then(ret => {
+            browserHistory.push(`/clazz/${id}/detail`);
+        });
+    }
     _renderClazzList() {
         const columns = [
             {
                 title: '名称',
                 dataIndex: 'name',
                 key: 'name',
-                render: text => <a href="#">{text}</a>,
+                render: (text, s) => <a href="#" onClick={(e) => this.linkToDetail(e, s._id)}>{text}</a>
             },
             {
                 title: '课程集',
@@ -128,9 +137,9 @@ export default class Student extends Component {
                     <span>
                         <a href="#" onClick={(e) => this.openAddStuModal(e, s._id)}>添加学生</a>
                         <span className="ant-divider" />
-                        <a href="#" onClick={(e) => this.openEditModal(e, s._id)}>修改</a>
+                        <a href='#' onClick={(e) => this.linkToSchedule(e, s._id)}>学习进度</a>
                         <span className="ant-divider" />
-                        <a href="#">删除</a>
+                        <a href="#" onClick={(e) => this.openEditModal(e, s._id)}>修改</a>
                     </span>
                 )
             }
@@ -138,17 +147,19 @@ export default class Student extends Component {
         let dataList = [];
         let clazzList = this.props.clazzList.toArray();
         clazzList.map((t, i) => {
+            let cs = this.props.cs.find(c => c.get('_id') == t.get('cs'));
             let tmp = {
                 key: t.get('_id'),
                 _id: t.get('_id'),
                 name: t.get('name'),
                 grade: t.get('grade'),
+                cs: cs ? cs.get('name') : undefined,
                 rank: t.get('rank')
             };
             dataList.push(tmp);
         })
         return (
-            <Table columns={columns} defaultPageSize={20} pagination={{defaultCurrent: 1, total: 50}} dataSource={dataList} />
+            <Table columns={columns} pagination={false} dataSource={dataList} />
         );
     }
     render() {

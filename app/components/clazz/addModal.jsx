@@ -37,7 +37,7 @@ class AddClazzForm extends Component {
     renderCsOptions = () => {
         const options = [];
         this.props.cs.map(t => {
-            options.push(<Option key={t.get('_id')}>{t.get('name')}</Option>);
+            options.push(<Option value={t.get('_id')} key={t.get('_id')}>{t.get('name')}</Option>);
         });
         return options;
     }
