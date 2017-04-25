@@ -51,10 +51,11 @@ export default class StudentAdd extends Component {
     }
     _handleAddSubmit = (values) => {
         console.log('submit values', values);
-        if (values.sentences && values.sentences.length > 1){
+        if (values.sentences && values.sentences.length > 0){
             let sentences = values.sentences;
             sentences.map((s, index) => {
                 values[`voice-${index}`] = s.voice._id;
+                values[`sentence-${index}`] = s.content;
             });
             delete values.sentences;
         }

@@ -22,5 +22,10 @@ export default [
     // 删除一个 STUDENT
     'DELETE_STUDENT',
     'DELETE_STUDENT_SUCCESS',
-    'DELETE_STUDENT_FAIL'
+    'DELETE_STUDENT_FAIL',
+
+    // 删除一个 STUDENT
+    'MARK_STUDENT',
+    'MARK_STUDENT_SUCCESS',
+    'MARK_STUDENT_FAIL'
 ];

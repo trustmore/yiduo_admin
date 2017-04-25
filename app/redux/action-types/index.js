@@ -5,12 +5,14 @@ import clazz from './clazz';
 import teacher from './teacher';
 import user from './user';
 import course from './course';
+import cs from './course-set';
 
 let actions = [].concat(
     student,
     teacher,
     clazz,
     course,
+    cs,
     user
 );
 const _actions = {};

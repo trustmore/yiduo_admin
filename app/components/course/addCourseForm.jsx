@@ -1,8 +1,7 @@
 //说明
 // sentences为句子列表，结构为：
 // sentences = [{
-//     _id: //编辑时的句子 ID
-//     key: 10,
+//     key: 10, 删除后会引起跳变
 //     content: '句子内容',
 //     voice: {
 //         _id
@@ -28,10 +27,9 @@ class AddCourseForm extends Component {
     constructor(props) {
         super(props);
         let course = props.course ? props.course.toJS() : {};
-        console.log('AddCourseForm', props);
         //需要处理 sentences 的 key 和 uuid
         if (course.sentences && course.sentences.length > 0) {
-            course.uuid = course.sentences.length - 1;
+            course.uuid = course.sentences.length;
         }
         this.state = Object.assign({}, {
             type: "recite",
@@ -42,7 +40,6 @@ class AddCourseForm extends Component {
     }
     componentDidMount() {
         let course = this.props.course ? this.props.course.toJS() : {};
-        console.log('componentDidMount', course);
         if (course.sentences && course.sentences.length > 0) {
             course.sentences.map((t, index) => {
                 t.key = index;
@@ -56,16 +53,18 @@ class AddCourseForm extends Component {
             if (!err) {
                 let voiceUploaded = true;
                 const sentences = this.props.form.getFieldValue('sentences');
-                sentences.map(s => {
-                    if (!s.voice) {
-                        voiceUploaded = false;
+                if (sentences) {
+                    sentences.map(s => {
+                        if (!s.voice) {
+                            voiceUploaded = false;
+                        }
+                    });
+                    if (!voiceUploaded) {
+                        message.warn('请上传相应语音');
+                        return false;
                     }
-                });
-                if (!voiceUploaded) {
-                    message.warn('请上传相应语音');
-                    return false;
+                    values.sentences = sentences;
                 }
-                values.sentences = sentences;
                 this.props.onSubmit(values);
             }
         });
@@ -81,10 +80,8 @@ class AddCourseForm extends Component {
         });
     }
     onSenAdd = () => {
-        this.state.uuid++;
         const { form } = this.props;
         const sentences = form.getFieldValue('sentences') || [];
-        console.log('uuid', this.state.uuid);
         sentences.push({
             key: this.state.uuid,
             content: ''
@@ -92,9 +89,9 @@ class AddCourseForm extends Component {
         form.setFieldsValue({
             sentences
         });
+        this.state.uuid++;
     }
     onTypeChange = (e) => {
-        console.log('onTypeChange', e.target.value);
         this.setState({
             type: e.target.value
         });
@@ -118,7 +115,6 @@ class AddCourseForm extends Component {
     onSenChange = (e, key) => {
         const sentences = this.props.form.getFieldValue('sentences');
         sentences.find(s => { return s.key === key; }).content = e.target.value;
-        console.log('onSenChange', e.target.value, sentences);
         this.props.form.setFieldsValue({
             sentences
         });
@@ -269,9 +265,7 @@ class AddCourseForm extends Component {
                 authorization: getToken(),
             },
         };
-        console.log('_renderSentences', sentences);
         return sentences.map((k, index) => {
-            console.log('_renderSentences key', k.key);
             let voice = `voice-${k.key}`;
             let up = {
                 voice,
@@ -298,7 +292,6 @@ class AddCourseForm extends Component {
                 }];
             }
             let uplaodProps = Object.assign(up, uplaodDefaultProps);
-            console.log('uplaodProps', uplaodProps);
             return (
                 <FormItem
                     {...formItemLayout}

@@ -155,7 +155,7 @@ export function deleteOne(id) {
         promise: () => {
             return new Promise((resolve, reject) => {
                 ajax({
-                    url: '/COURSE/delete',
+                    url: '/course/delete',
                     type: 'POST',
                     data: {
                         id: parseInt(id)

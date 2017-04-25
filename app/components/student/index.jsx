@@ -3,8 +3,9 @@ import React, { Component, PropTypes } from 'react';
 import {Link} from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetch, remove } from 'redux/reducers/student';
+import { create, fetch, remove, update } from 'redux/reducers/student';
 import { Table, Icon, Popconfirm } from 'antd';
+import AddModal from './AddModal';
 
 import style from 'styles/modules/home/home.scss';
 
@@ -14,7 +15,7 @@ import style from 'styles/modules/home/home.scss';
         clazzList: state.getIn(['clazz', 'list']),
         list: state.getIn(['student', 'list'])
     }),
-    dispatch => bindActionCreators({fetch, remove}, dispatch)
+    dispatch => bindActionCreators({create, fetch, remove, update}, dispatch)
 )
 export default class Student extends Component {
     static propTypes = {
@@ -22,16 +23,67 @@ export default class Student extends Component {
         clazzList: PropTypes.object,
         isFetching: PropTypes.object,
         fetch: PropTypes.func,
+        update: PropTypes.func,
         remove: PropTypes.func
     };
     constructor(props) {
         super(props);
         this.state = {
-            hhh: 1
+            visible: false,
+            edit: false
         };
     }
     componentDidMount() {
         this.props.fetch();
+    }
+    onClickAddBtn = e => {
+        e.preventDefault();
+        this.setState({
+            edit: false,
+            visible: true
+        });
+    }
+    handleOk = () => {
+        this.setState({
+            visible: false
+        });
+    }
+    closeModal = () => {
+        this.setState({
+            visible: false
+        });
+    }
+    handleSubmit = (values) => {
+        console.log('submit values', values);
+        if (this.state.edit) {
+            values._id = this.state.currentStu._id;
+            this.props.update(values).then(ret => {
+                this.setState({
+                    visible: false
+                });
+            });
+        } else {
+            this.props.create(values).then(ret => {
+                this.setState({
+                    visible: false
+                });
+            });
+        }
+    }
+    onClickEditBtn = (e, _id) => {
+        e.preventDefault();
+        let currentStu = this.props.list.find((s) => {
+            return s.get('_id') === _id;
+        }).toJS();
+        let currentClazz = this.props.clazzList.find((c) => {
+            return c.get('_id') === currentStu.clazz;
+        }).toJS();
+        this.setState({
+            visible: true,
+            edit: true,
+            currentStu,
+            currentClazz
+        });
     }
     _renderLoading() {
         if (this.props.isFetching) {
@@ -42,6 +94,14 @@ export default class Student extends Component {
     }
     remove(_id) {
         this.props.remove({_id}).then(ret => {});
+    }
+    _renderAddBtn() {
+        return (
+            <a onClick={this.onClickAddBtn} href="#">
+                <Icon type="user-add" />
+                <span>添加学生</span>
+            </a>
+        )
     }
     _renderStudentList() {
         const columns = [
@@ -57,14 +117,19 @@ export default class Student extends Component {
                 key: 'clazz',
             },
             {
+                title: '家长电话',
+                dataIndex: 'ptel',
+                key: 'ptel',
+            },
+            {
                 title: '操作',
                 key: 'action',
                 render: (text, i) => {
                     return (
                         <span>
-                            <Link to={`/student/${i._id}`}>详情</Link>
-                            <span className="ant-divider" />
-                            <Link to={`/teacher/${i._id}/parent`}>家长</Link>
+                            <a onClick={(e) => this.onClickEditBtn(e, i._id)} href="#">
+                                <span>编辑</span>
+                            </a>
                             <span className="ant-divider" />
                             <Popconfirm title="确认删除吗？" onConfirm={() => this.remove(i._id)} okText="确认" cancelText="取消">
                                 <a href="#">删除</a>
@@ -85,6 +150,7 @@ export default class Student extends Component {
                 _id: t.get('_id'),
                 name: t.get('name'),
                 key: t.get('_id'),
+                ptel: t.get('ptel'),
                 clazz: clazz ? clazz.get('name') : '未知'
             };
             dataList.push(tmp);
@@ -97,14 +163,21 @@ export default class Student extends Component {
         return (
             <div id={style.home}>
                 <div>
-                    <h1>student</h1>
-                    <Link to="/student/add">
-                        <Icon type="user-add" />
-                        <span>添加学生</span>
-                    </Link>
+                    <h1>学生</h1>
                 </div>
                 { this._renderLoading() }
                 { this._renderStudentList() }
+
+                <AddModal
+                    visible={this.state.visible}
+                    edit={this.state.edit}
+                    student={this.state.currentStu}
+                    clazz={this.state.currentClazz}
+                    closeModal={this.closeModal}
+                    handleOk={this.handleOk}
+                    handleCancel={this.handleCancel}
+                    onSubmit={this.handleSubmit}
+                    clazzList={this.props.clazzList} />
             </div>
         );
     }

@@ -6,5 +6,9 @@ export default [
 
     'CREATE_CLAZZ',
     'CREATE_CLAZZ_SUCCESS',
-    'CREATE_CLAZZ_FAIL'
+    'CREATE_CLAZZ_FAIL',
+
+    'UPDATE_CLAZZ',
+    'UPDATE_CLAZZ_SUCCESS',
+    'UPDATE_CLAZZ_FAIL'
 ];

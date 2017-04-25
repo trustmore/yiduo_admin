@@ -4,7 +4,8 @@ import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Icon, Popconfirm } from 'antd';
-import { remove } from 'redux/reducers/teacher';
+import { remove, create } from 'redux/reducers/teacher';
+import AddModal from './AddModal';
 
 import style from 'styles/modules/home/home.scss';
 
@@ -12,12 +13,11 @@ import style from 'styles/modules/home/home.scss';
     state => ({
         teacherList: state.getIn(['teacher', 'list'])
     }),
-    dispatch => bindActionCreators({remove}, dispatch)
+    dispatch => bindActionCreators({remove, create}, dispatch)
 )
 export default class Teacher extends Component {
     static propTypes = {
-        teacherList: PropTypes.object,
-        remove: PropTypes.object
+        teacherList: PropTypes.object
     };
     constructor(props) {
         super(props);
@@ -25,6 +25,20 @@ export default class Teacher extends Component {
         };
     }
     componentDidMount() {
+    }
+    onClickAddBtn = e => {
+        e.preventDefault();
+        this.setState({
+            visible: true
+        });
+    }
+    handleSubmit = (values) => {
+        console.log('submit values', values);
+        this.props.create(values).then(ret => {
+            this.setState({
+                visible: false
+            });
+        });
     }
     _renderLoading() {
         if (this.props.isFetching) {
@@ -82,13 +96,19 @@ export default class Teacher extends Component {
             <div id={style.home}>
                 <div>
                     <h1>teacher</h1>
-                    <Link to="/teacher/add">
+                    <a onClick={this.onClickAddBtn} href="#">
                         <Icon type="user-add" />
                         <span>添加老师</span>
-                    </Link>
+                    </a>
                 </div>
                 { this._renderLoading() }
                 { this._renderTeacherList() }
+                <AddModal
+                    visible={this.state.visible}
+                    closeModal={this.closeModal}
+                    handleOk={this.handleOk}
+                    handleCancel={this.handleCancel}
+                    onSubmit={this.handleSubmit} />
             </div>
         );
     }

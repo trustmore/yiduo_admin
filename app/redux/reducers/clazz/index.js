@@ -1,6 +1,7 @@
 
 import I from 'immutable';
 import { createReducer } from 'redux/creator';
+import { message } from 'antd';
 
 import { ajax } from 'utils/request';
 import {
@@ -9,7 +10,10 @@ import {
     FETCH_CLAZZ_LIST_DATA_FAIL,
     CREATE_CLAZZ,
     CREATE_CLAZZ_SUCCESS,
-    CREATE_CLAZZ_FAIL
+    CREATE_CLAZZ_FAIL,
+    UPDATE_CLAZZ,
+    UPDATE_CLAZZ_SUCCESS,
+    UPDATE_CLAZZ_FAIL
 } from 'redux/action-types';
 
 let defaultState = I.fromJS({
@@ -26,6 +30,18 @@ export default createReducer(I.fromJS(defaultState), {
     },
     [FETCH_CLAZZ_LIST_DATA_FAIL](state, action) {
         return state.set('isFetching', false);
+    },
+    [CREATE_CLAZZ_SUCCESS](state, action) {
+        console.log('CREATE_CLAZZ_SUCCESS', action);
+        const tlist = state.get('list');
+        return state.set('cs', tlist.push(I.fromJS(action.result)));
+    },
+    [UPDATE_CLAZZ_SUCCESS](state, action) {
+        console.log('UPDATE_CLAZZ_SUCCESS', action);
+        message.success('修改成功');
+        var index = state.get('list').findIndex( item => item.get("_id") === action.result._id );
+        console.log('reducers', index, action.result);
+        return state.setIn(['list', index], I.fromJS(action.result));
     }
 });
 
@@ -56,6 +72,23 @@ export function create(params) {
             return new Promise((resolve, reject) => {
                 ajax({
                     url: '/clazz/create',
+                    type: 'POST',
+                    data: params,
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function update(params) {
+    return {
+        types: [UPDATE_CLAZZ, UPDATE_CLAZZ_SUCCESS, UPDATE_CLAZZ_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: '/clazz/update',
                     type: 'POST',
                     data: params,
                     success: response => resolve(response),

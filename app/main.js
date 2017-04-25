@@ -7,6 +7,7 @@ import { Router, browserHistory } from 'react-router';
 import { fetchUserData } from 'redux/reducers/user';
 import { fetch as clazzFetch } from 'redux/reducers/clazz';
 import { fetch as teacherFetch } from 'redux/reducers/teacher';
+import { fetch as csFetch } from 'redux/reducers/course-set';
 
 import moment from 'moment';
 moment.locale('zh-cn');
@@ -40,6 +41,7 @@ import initStore from './redux/init';
     await store.dispatch(fetchUserData());
     await store.dispatch(clazzFetch());
     await store.dispatch(teacherFetch());
+    await store.dispatch(csFetch());
 
     ReactDOM.render(
         <Provider store={store}>

@@ -24,7 +24,11 @@ import {
 
     DELETE_STUDENT,
     DELETE_STUDENT_SUCCESS,
-    DELETE_STUDENT_FAIL
+    DELETE_STUDENT_FAIL,
+
+    MARK_STUDENT,
+    MARK_STUDENT_SUCCESS,
+    MARK_STUDENT_FAIL
 } from 'redux/action-types';
 
 let defaultState = I.fromJS({
@@ -50,7 +54,8 @@ export default createReducer(I.fromJS(defaultState), {
     },
     [CREATE_STUDENT_SUCCESS](state, action) {
         message.success('添加成功');
-        return state.set('creating', false);
+        const tlist = state.get('list');
+        return state.set('list', tlist.push(I.fromJS(action.result)));
     },
     [CREATE_STUDENT_FAIL](state, action) {
         message.warning('添加失败');
@@ -72,13 +77,34 @@ export default createReducer(I.fromJS(defaultState), {
     },
 
     [FETCH_STUDENT_DETAIL](state, action) {
-        return state;
+        return state.set('isFetching', true);
     },
     [FETCH_STUDENT_DETAIL_SUCCESS](state, action) {
         console.log('FETCH_STUDENT_DETAIL_SUCCESS', action.result);
-        return state.set('detail', I.fromJS(action.result));
+        return state.set('detail', I.fromJS(action.result)).set('isFetching', false);
     },
     [FETCH_STUDENT_DETAIL_FAIL](state, action) {
+        return state.set('isFetching', false);
+    },
+
+    [UPDATE_STUDENT_SUCCESS](state, action) {
+        console.log('UPDATE_STUDENT_SUCCESS', action);
+        message.success('修改成功');
+        var index = state.get('list').findIndex( item => item.get("_id") === action.result._id );
+        return state.setIn(['list', index], I.fromJS(action.result));
+    },
+    [MARK_STUDENT_SUCCESS](state, action) {
+        console.log('MARK_STUDENT', action);
+        message.success('修改成功');
+        var index = state.getIn(['detail', 'stucourses']).findIndex( item => item.get("_id") === action.result._id );
+        if (index >= 0){
+            return state.setIn(['detail', 'stucourses', index], I.fromJS(action.result));
+        }
+        let tmp = state.getIn(['detail', 'stucourses']);
+        return state.setIn(['detail', 'stucourses'], tmp.push(I.fromJS(action.result)));
+    },
+    [MARK_STUDENT](state, action) {
+        console.log('MARK_STUDENT', action);
         return state;
     }
 });
@@ -163,6 +189,23 @@ export function remove(params) {
             return new Promise((resolve, reject) => {
                 ajax({
                     url: '/student/delete',
+                    type: 'POST',
+                    data: params,
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function mark(params) {
+    return {
+        types: [MARK_STUDENT, MARK_STUDENT_SUCCESS, MARK_STUDENT_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: '/student/mark',
                     type: 'POST',
                     data: params,
                     success: response => resolve(response),

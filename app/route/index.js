@@ -12,6 +12,7 @@ export default {
         require('./course'),
         require('./clazz'),
         require('./dashboard'),
+        require('./course-set'),
         // not found router must at last
         {
             path: '*',
