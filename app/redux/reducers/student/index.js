@@ -80,7 +80,6 @@ export default createReducer(I.fromJS(defaultState), {
         return state.set('isFetching', true);
     },
     [FETCH_STUDENT_DETAIL_SUCCESS](state, action) {
-        console.log('FETCH_STUDENT_DETAIL_SUCCESS', action.result);
         return state.set('detail', I.fromJS(action.result)).set('isFetching', false);
     },
     [FETCH_STUDENT_DETAIL_FAIL](state, action) {
@@ -88,13 +87,11 @@ export default createReducer(I.fromJS(defaultState), {
     },
 
     [UPDATE_STUDENT_SUCCESS](state, action) {
-        console.log('UPDATE_STUDENT_SUCCESS', action);
         message.success('修改成功');
         var index = state.get('list').findIndex( item => item.get("_id") === action.result._id );
         return state.setIn(['list', index], I.fromJS(action.result));
     },
     [MARK_STUDENT_SUCCESS](state, action) {
-        console.log('MARK_STUDENT', action);
         message.success('修改成功');
         var index = state.getIn(['detail', 'stucourses']).findIndex( item => item.get("_id") === action.result._id );
         if (index >= 0){
@@ -104,7 +101,6 @@ export default createReducer(I.fromJS(defaultState), {
         return state.setIn(['detail', 'stucourses'], tmp.push(I.fromJS(action.result)));
     },
     [MARK_STUDENT](state, action) {
-        console.log('MARK_STUDENT', action);
         return state;
     }
 });

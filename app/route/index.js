@@ -13,6 +13,7 @@ export default {
         require('./clazz'),
         require('./dashboard'),
         require('./course-set'),
+        require('./gift'),
         // not found router must at last
         {
             path: '*',

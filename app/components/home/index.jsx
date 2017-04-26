@@ -17,10 +17,9 @@ export default class Home extends Component {
     componentDidMount() {
     }
     render() {
-        console.log('today===>', this.props.user.get('name'));
         return (
             <div id={style.home}>
-                <h1>home</h1>
+                <h1>易多</h1>
             </div>
         );
     }

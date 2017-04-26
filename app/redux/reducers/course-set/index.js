@@ -29,7 +29,6 @@ let defaultState = I.fromJS({
 
 export default createReducer(I.fromJS(defaultState), {
     [FETCH_CS_DATA_SUCCESS](state, action) {
-        console.log('FETCH_CS_DATA_SUCCESS', action);
         return state.set('cs', I.fromJS(action.result)).set('isFetching', false);
     },
     [UPDATE_CS_DATA_SUCCESS](state, action) {

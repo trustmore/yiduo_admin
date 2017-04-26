@@ -4,20 +4,24 @@ import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Icon, Popconfirm } from 'antd';
-import { remove, create, update } from 'redux/reducers/teacher';
+import { fetch, create, update, remove } from 'redux/reducers/gift';
 import AddModal from './AddModal';
 
 import style from 'styles/modules/home/home.scss';
 
 @connect(
     state => ({
-        teacherList: state.getIn(['teacher', 'list'])
+        giftList: state.getIn(['gift', 'list'])
     }),
-    dispatch => bindActionCreators({remove, create, update}, dispatch)
+    dispatch => bindActionCreators({fetch, create, update, remove}, dispatch)
 )
-export default class Teacher extends Component {
+export default class Gift extends Component {
     static propTypes = {
-        teacherList: PropTypes.object
+        giftList: PropTypes.object,
+        fetch: PropTypes.func,
+        create: PropTypes.func,
+        update: PropTypes.func,
+        remove: PropTypes.func
     };
     constructor(props) {
         super(props);
@@ -27,6 +31,7 @@ export default class Teacher extends Component {
         };
     }
     componentDidMount() {
+        this.props.fetch();
     }
     onClickAddBtn = e => {
         e.preventDefault();
@@ -35,26 +40,9 @@ export default class Teacher extends Component {
             visible: true
         });
     }
-    onOpenEdit = (e, tid) => {
-        e.preventDefault();
-        let currentTea = this.props.teacherList.find((t) => {
-            return t.get('_id') === tid;
-        }).toJS();
-        console.log('onOpenEdit===>', tid, currentTea);
-        this.setState({
-            visible: true,
-            edit: true,
-            currentTea
-        });
-    }
-    handleCancel = () => {
-        this.setState({
-            visible: false
-        });
-    }
     handleSubmit = (values) => {
         if (this.state.edit) {
-            values._id = this.state.currentTea._id;
+            values._id = this.state.currentGift._id;
             this.props.update(values).then(ret => {
                 this.setState({
                     visible: false
@@ -68,6 +56,26 @@ export default class Teacher extends Component {
             });
         }
     }
+    handleCancel = () => {
+        this.setState({
+            visible: false
+        });
+    }
+    onOpenEdit = (e, gid) => {
+        e.preventDefault();
+        let currentGift = this.props.giftList.find((t) => {
+            return t.get('_id') === gid;
+        }).toJS();
+        console.log('onOpenEdit===>', gid, currentGift);
+        this.setState({
+            visible: true,
+            edit: true,
+            currentGift
+        });
+    }
+    onRemove = (id) => {
+        this.props.remove(id);
+    }
     _renderLoading() {
         if (this.props.isFetching) {
             return (
@@ -75,21 +83,31 @@ export default class Teacher extends Component {
             );
         }
     }
-    remove(_id) {
-        this.props.remove({_id}).then(ret => {
-            if (ret && ret.type === 'success') {
-                browserHistory.push('/teacher');
-            }
-        });
-        return false;
-    }
-    _renderTeacherList() {
+    _renderGiftList() {
         const columns = [
             {
-                title: '姓名',
+                title: '名称',
                 dataIndex: 'name',
                 key: 'name',
-                render: (text, i) => <Link to={`/teacher/${i._id}`}>{text}</Link>
+                render: (text, i) => <Link to={`/gift/${i._id}`}>{text}</Link>
+            },
+            {
+                title: '库存',
+                dataIndex: 'stock',
+                key: 'stock',
+                render: (text, i) => <span>{text}</span>
+            },
+            {
+                title: '状态',
+                dataIndex: 'status',
+                key: 'status',
+                render: (text, i) => <span>{text}</span>
+            },
+            {
+                title: '兑换积分',
+                dataIndex: 'points',
+                key: 'points',
+                render: (text, i) => <span>{text}</span>
             },
             {
                 title: '操作',
@@ -98,7 +116,7 @@ export default class Teacher extends Component {
                     <span>
                         <a href='#' onClick={(e) => this.onOpenEdit(e, i._id)}>编辑</a>
                         <span className="ant-divider" />
-                        <Popconfirm title="确认删除吗？" onConfirm={() => this.remove(i._id)} okText="确认" cancelText="取消">
+                        <Popconfirm title="确认删除吗？" onConfirm={() => this.onRemove(i._id)} okText="确认" cancelText="取消">
                             <a href="#">删除</a>
                         </Popconfirm>
                     </span>
@@ -106,35 +124,38 @@ export default class Teacher extends Component {
             }
         ];
         let dataList = [];
-        let teacherList = this.props.teacherList.toArray();
-        teacherList.map((t, i) => {
+        let giftList = this.props.giftList ? this.props.giftList.toJS() : [];
+        giftList.map((t, i) => {
             let tmp = {
-                _id: t.get('_id'),
-                key: t.get('_id'),
-                name: t.get('name')
+                _id: t._id,
+                key: t._id,
+                stock: t.stock,
+                status: t.status == 'able' ? '可兑换' : '不可兑换',
+                points: t.points,
+                name: t.name
             };
             dataList.push(tmp);
         })
         return (
-            <Table columns={columns} defaultPageSize={20} pagination={{defaultCurrent: 1, total: 50}} dataSource={dataList} />
+            <Table columns={columns} pagination={false} dataSource={dataList} />
         );
     }
     render() {
         return (
             <div id={style.home}>
                 <div>
-                    <h1>老师</h1>
+                    <h1>奖品</h1>
                     <a onClick={this.onClickAddBtn} href="#">
                         <Icon type="user-add" />
-                        <span>添加老师</span>
+                        <span>添加奖品</span>
                     </a>
                 </div>
                 { this._renderLoading() }
-                { this._renderTeacherList() }
+                { this._renderGiftList() }
                 <AddModal
                     visible={this.state.visible}
                     edit={this.state.edit}
-                    currentTea={this.state.currentTea}
+                    currentGift={this.state.currentGift}
                     onOk={this.handleSubmit}
                     onCancel={this.handleCancel} />
             </div>

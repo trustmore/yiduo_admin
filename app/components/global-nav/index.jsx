@@ -62,6 +62,12 @@ export default class GlobalNav extends Component {
                             <span className="nav-text">课程</span>
                         </Link>
                     </Menu.Item>
+                    <Menu.Item key="sub6">
+                        <Link activeClassName="active" to="/gift">
+                            <Icon type="appstore" />
+                            <span className="nav-text">积分兑换</span>
+                        </Link>
+                    </Menu.Item>
                 </Menu>
             </div>
         );

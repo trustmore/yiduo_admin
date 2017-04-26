@@ -6,6 +6,7 @@ import teacher from './teacher';
 import user from './user';
 import course from './course';
 import cs from './course-set';
+import gift from './gift';
 
 let actions = [].concat(
     student,
@@ -13,6 +14,7 @@ let actions = [].concat(
     clazz,
     course,
     cs,
+    gift,
     user
 );
 const _actions = {};

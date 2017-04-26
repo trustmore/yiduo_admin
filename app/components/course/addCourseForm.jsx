@@ -272,6 +272,7 @@ class AddCourseForm extends Component {
                 key: voice,
                 defaultFileList: [],
                 onChange: (info) => {
+                    console.log('voice onchange', info);
                     if (info.file.status !== 'uploading') {
                         console.log(info.file, info.fileList);
                     }

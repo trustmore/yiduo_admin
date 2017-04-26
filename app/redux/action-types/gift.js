@@ -1,0 +1,17 @@
+export default [
+    'FETCH_GIFT',
+    'FETCH_GIFT_SUCCESS',
+    'FETCH_GIFT_FAIL',
+
+    'CREATE_GIFT',
+    'CREATE_GIFT_SUCCESS',
+    'CREATE_GIFT_FAIL',
+
+    'UPDATE_GIFT',
+    'UPDATE_GIFT_SUCCESS',
+    'UPDATE_GIFT_FAIL',
+
+    'REMOVE_GIFT',
+    'REMOVE_GIFT_SUCCESS',
+    'REMOVE_GIFT_FAIL'
+];

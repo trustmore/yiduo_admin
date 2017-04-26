@@ -7,6 +7,7 @@ import teacher from './teacher';
 import course from './course';
 import user from './user';
 import cs from './course-set';
+import gift from './gift';
 
 let initialState = I.fromJS({
     locationBeforeTransitions: undefined
@@ -29,5 +30,6 @@ export default combineReducers({
     clazz,
     course,
     cs,
+    gift,
     user
 });
