@@ -4,7 +4,7 @@ import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { create } from 'redux/reducers/student';
-import AddStudentForm from './AddStudentForm';
+import AddStudentForm from './addStudentForm';
 
 @connect(
     state => ({

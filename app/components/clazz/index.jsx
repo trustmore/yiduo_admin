@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { Table, Icon } from 'antd';
 import { create, update, fetchDetail, fetchSchedule } from 'redux/reducers/clazz';
 import { create as createStudent } from 'redux/reducers/student';
-import AddModal from './AddModal';
-import AddStudentModal from '../student/AddModal';
+import AddModal from './addModal';
+import AddStudentModal from '../student/addModal';
 
 import style from 'styles/modules/home/home.scss';
 

@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { create, fetch, remove, update } from 'redux/reducers/student';
 import { Table, Icon, Popconfirm } from 'antd';
-import AddModal from './AddModal';
+import AddModal from './addModal';
 
 import style from 'styles/modules/home/home.scss';
 

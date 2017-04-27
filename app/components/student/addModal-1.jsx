@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Modal } from 'antd';
-import AddStudentForm from './AddStudentForm';
+import AddStudentForm from './addStudentForm';
 
 export default class AddStudentModal extends Component {
     static propTypes = {

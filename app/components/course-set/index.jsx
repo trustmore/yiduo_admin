@@ -5,8 +5,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Icon } from 'antd';
 import { fetchOne, create, updateCourseSet } from 'redux/reducers/course-set';
-import AddModal from './AddModal';
-import AddCourseModal from './AddCourseModal';
+import AddModal from './addModal';
+import AddCourseModal from './addCourseModal';
 import I from 'immutable';
 
 import style from 'styles/modules/home/home.scss';
