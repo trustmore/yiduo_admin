@@ -6,11 +6,14 @@ import { ajax } from 'utils/request';
 import {
     FETCH_USER_INFO_DATA,
     FETCH_USER_INFO_DATA_SUCCESS,
-    FETCH_USER_INFO_DATA_FAIL
+    FETCH_USER_INFO_DATA_FAIL,
+    LOGOUT,
+    LOGOUT_SUCCESS,
+    LOGOUT_FAIL
 } from 'redux/action-types';
 
 let defaultState = I.fromJS({
-    user: null,
+    user: {},
     isFetching: false
 });
 
@@ -34,6 +37,23 @@ export function fetchUserData() {
                 ajax({
                     url: '/user/info',
                     type: 'GET',
+                    data: {},
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function logout() {
+    return {
+        types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: '/logout',
+                    type: 'POST',
                     data: {},
                     success: response => resolve(response),
                     error: error => reject(error)
