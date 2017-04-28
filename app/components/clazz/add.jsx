@@ -4,7 +4,7 @@ import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { create } from 'redux/reducers/clazz';
-import AddClazzForm from './AddClazzForm';
+import AddClazzForm from './addClazzForm';
 
 @connect(
     state => ({

@@ -13,7 +13,6 @@ dist
 test-results
 test/visuals
 .happypack
-lib/
 ui-doc/layout/main.jsx
 ui-doc/layout/sidebar.jsx
 ui/components/index.js
