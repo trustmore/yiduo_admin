@@ -32,17 +32,17 @@ export default createReducer(I.fromJS(defaultState), {
         return state.set('cs', I.fromJS(action.result)).set('isFetching', false);
     },
     [UPDATE_CS_DATA_SUCCESS](state, action) {
-        console.log('UPDATE_CS_DATA_SUCCESS', action);
         message.success('修改成功');
         var index = state.get('cs').findIndex( item => item.get("_id") === action.result._id );
+        if (action.result.name) {
+            return state.setIn(['cs', index, 'name'], I.fromJS(action.result.name));
+        }
         return state.setIn(['cs', index, 'courses'], I.fromJS(action.result.courses));
     },
     [FETCH_CS_DETAIL_SUCCESS](state, action) {
-        console.log('FETCH_CS_DETAIL_SUCCESS', action);
         return state.set('current_cs', I.fromJS(action.result));
     },
     [CREATE_CS_SUCCESS](state, action) {
-        console.log('CREATE_CS_SUCCESS', action);
         const tlist = state.get('cs');
         return state.set('cs', tlist.push(I.fromJS(action.result)));
     }

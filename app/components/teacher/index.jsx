@@ -92,6 +92,12 @@ export default class Teacher extends Component {
                 render: (text, i) => <Link to={`/teacher/${i._id}`}>{text}</Link>
             },
             {
+                title: '英文名',
+                dataIndex: 'ename',
+                key: 'ename',
+                render: (text, i) => <span>{text}</span>
+            },
+            {
                 title: '操作',
                 key: 'action',
                 render: (text, i) => (
@@ -111,6 +117,7 @@ export default class Teacher extends Component {
             let tmp = {
                 _id: t.get('_id'),
                 key: t.get('_id'),
+                ename: t.get('ename'),
                 name: t.get('name')
             };
             dataList.push(tmp);

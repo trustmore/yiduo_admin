@@ -11,6 +11,8 @@ class AddCsForm extends Component {
         onSubmit: PropTypes.func,
         clazzList: PropTypes.object,
         visible: PropTypes.bool,
+        edit: PropTypes.bool,
+        currentCs: PropTypes.object,
         onCancel: PropTypes.func,
         onOk: PropTypes.func
     };
@@ -24,12 +26,16 @@ class AddCsForm extends Component {
         });
     }
     render() {
+        console.log('cs modal ', this.props);
         const { getFieldDecorator } = this.props.form;
+        let name = this.props.edit ? this.props.currentCs.name : undefined;
+        let okText = this.props.edit ? '修改' : '添加';
+        let title = this.props.edit ? '修改课程集' : '添加课程集';
         return (
             <Modal
               visible={this.props.visible}
-              title="添加课程集"
-              okText="添加"
+              title={title}
+              okText={okText}
               onCancel={this.props.onCancel}
               onOk={this.props.onOk}
             >
@@ -39,6 +45,7 @@ class AddCsForm extends Component {
                         label="名称"
                         hasFeedback >
                         {getFieldDecorator('name', {
+                            initialValue: name,
                             rules: [{
                                 pattern: /\S+/,
                                 message: '课程集名称空白'
@@ -63,16 +70,16 @@ export default class AddModal extends Component {
         handleOk: PropTypes.func,
         handleCancel: PropTypes.func,
         closeModal: PropTypes.func,
-        visible: PropTypes.bool
+        currentCs: PropTypes.object,
+        visible: PropTypes.bool,
+        edit: PropTypes.bool
     };
     constructor(props) {
         super(props);
     }
     handleOk = () => {
-        console.log('handleOk', this.props);
         this.form.validateFieldsAndScroll((err, values) => {
             if (err){ return; }
-            console.log('Received values of form: ', values);
             this.props.onSubmit(values);
         });
     }
@@ -83,10 +90,15 @@ export default class AddModal extends Component {
         this.form = form;
     }
     render() {
+        if (!this.props.visible) {
+            return null;
+        }
         return (
             <AddForm
                 ref={this.saveFormRef}
                 visible={this.props.visible}
+                edit={this.props.edit}
+                currentCs={this.props.currentCs}
                 onCancel={this.handleCancel}
                 onOk={this.handleOk}
                 onSubmit={this.props.handleOk}

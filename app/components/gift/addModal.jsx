@@ -18,7 +18,7 @@ class AddGiftForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            image: props.currentGift.image
+            image: props.currentGift ? props.currentGift.image : undefined
         };
     }
     handleSubmit = (e) => {

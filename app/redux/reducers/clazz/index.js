@@ -41,7 +41,7 @@ export default createReducer(I.fromJS(defaultState), {
     },
     [CREATE_CLAZZ_SUCCESS](state, action) {
         const tlist = state.get('list');
-        return state.set('cs', tlist.push(I.fromJS(action.result)));
+        return state.set('list', tlist.push(I.fromJS(action.result)));
     },
     [FETCH_CLAZZ_DETAIL_SUCCESS](state, action) {
         return state.set('detail', I.fromJS(action.result));

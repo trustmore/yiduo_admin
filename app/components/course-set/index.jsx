@@ -27,6 +27,7 @@ export default class CsList extends Component {
         super(props);
         this.state = {
             visible: false,
+            edit: false,
             acvisible: false
         };
     }
@@ -43,6 +44,7 @@ export default class CsList extends Component {
     onClickAddBtn = e => {
         e.preventDefault();
         this.setState({
+            edit: false,
             visible: true
         });
     }
@@ -52,19 +54,42 @@ export default class CsList extends Component {
         let currentCs = this.props.cs.find((c) => {
             return c.get('_id') === this.state.csid;
         }).toJS();
-        console.log('currentCs', currentCs);
         this.setState({
             acvisible: true,
             currentCsId: csid,
             currentCs
         });
     }
-    handleSubmit = (values) => {
-        this.props.create(values).then(ret => {
-            this.setState({
-                visible: false
-            });
+    showEditModal = (e, csid) => {
+        e.preventDefault();
+        this.state.csid = csid;
+        let currentCs = this.props.cs.find((c) => {
+            return c.get('_id') === this.state.csid;
+        }).toJS();
+        this.setState({
+            visible: true,
+            edit: true,
+            currentCsId: csid,
+            currentCs
         });
+    }
+    handleSubmit = (values) => {
+        if (this.state.edit) {
+            this.props.updateCourseSet({
+                csid: this.state.csid,
+                name: values.name
+            }).then(ret => {
+                this.setState({
+                    visible: false
+                });
+            });
+        } else {
+            this.props.create(values).then(ret => {
+                this.setState({
+                    visible: false
+                });
+            });
+        }
     }
     closeAddModal = () => {
         this.setState({
@@ -103,7 +128,7 @@ export default class CsList extends Component {
                 key: 'action',
                 render: (text, i) => (
                     <span>
-                        <a href='#'>编辑</a>
+                        <a href='#' onClick={(e) => this.showEditModal(e, i._id)}>修改名称</a>
                         <span className="ant-divider" />
                         <a href='#' onClick={(e) => this.showAddCourseModal(e, i._id)}>编辑课程</a>
                     </span>
@@ -140,8 +165,10 @@ export default class CsList extends Component {
                 { this._renderCsList() }
                 <AddModal
                     visible={this.state.visible}
+                    edit={this.state.edit}
                     closeModal={this.closeAddModal}
                     handleCancel={this.closeAddModal}
+                    currentCs={this.state.currentCs}
                     onSubmit={this.handleSubmit} />
                 <AddCourseModal
                     visible={this.state.acvisible}

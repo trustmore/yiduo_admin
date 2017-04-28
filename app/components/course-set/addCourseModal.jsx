@@ -28,7 +28,7 @@ export default class AddCourseModal extends Component {
         // rowSelection object indicates the need for row selection
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
-                this.state.selectedRowKeys = selectedRowKeys;
+                this.state.selectedRowKeys = selectedRowKeys || [];
             }
         };
         const columns = [
@@ -71,6 +71,9 @@ export default class AddCourseModal extends Component {
         );
     }
     render() {
+        if (!this.props.visible) {
+            return null;
+        }
         return (
             <Modal
               visible={this.props.visible}
