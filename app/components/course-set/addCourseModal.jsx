@@ -28,6 +28,7 @@ export default class AddCourseModal extends Component {
         // rowSelection object indicates the need for row selection
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
+
                 this.state.selectedRowKeys = selectedRowKeys || [];
             }
         };
@@ -51,19 +52,20 @@ export default class AddCourseModal extends Component {
             let selectedRowKeys = [];
             courseList.map((t, i) => {
                 let tmp = {
-                    key: t['_id'],
+                    key: t['type'] + ':' + t['_id'],
                     _id: t['_id'],
                     name: t['name'],
+                    type: t['type'],
                     score: t['score'],
                     sentence: 0
                 };
                 dataList.push(tmp);
-                if (this.props.currentCs && this.props.currentCs.courses.includes(t['_id'])) {
-                    selectedRowKeys.push(t['_id']);
+                if (this.props.currentCs && this.props.currentCs.courses.includes(tmp['key'])) {
+                    selectedRowKeys.push(tmp['key']);
                 }
             });
             rowSelection.getCheckboxProps =  (record) => {
-                return { defaultChecked: selectedRowKeys.includes(record._id) };
+                return { defaultChecked: selectedRowKeys.includes(record.key) };
             };
         }
         return (

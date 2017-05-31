@@ -143,6 +143,7 @@ export default class CsList extends Component {
                     key: t['_id'],
                     _id: t['_id'],
                     name: t['name'],
+                    abbr: t['abbr'],
                     courses: t['courses'] ? t['courses'].length : 0
                 };
                 dataList.push(tmp);

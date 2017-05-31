@@ -142,6 +142,28 @@ class AddCourseForm extends Component {
             </FormItem>
         );
     }
+    _renderAbbr = () => {
+        const { getFieldDecorator } = this.props.form;
+        return (
+            <FormItem
+                {...formItemLayout}
+                label="课程简称"
+                hasFeedback >
+                {getFieldDecorator('abbr', {
+                    initialValue: this.state.abbr,
+                    rules: [{
+                        pattern: /\S+/,
+                        message: '请填写课程简称'
+                    }, {
+                        required: true,
+                        message: '请填写课程简称',
+                    }]
+                })(
+                    <Input style={{width: '25%'}} />
+                )}
+            </FormItem>
+        );
+    }
     _renderScore = () => {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -334,6 +356,7 @@ class AddCourseForm extends Component {
         return (
             <Form onSubmit={this.handleSubmit}>
                 {this._renderName()}
+                {this._renderAbbr()}
                 {this._renderType()}
                 {this._renderScore()}
                 {this._renderScoreNote()}

@@ -8,6 +8,7 @@ const SortableItem = SortableElement(({value}) => {
     return (
         <tr className="ant-table-row  ant-table-row-level-0">
             <td className="">{value.name}</td>
+            <td className="">{value.abbr}</td>
             <td className="">{value.index + 1}</td>
             <td className=""><Icon type="bars" /></td>
         </tr>
@@ -31,6 +32,7 @@ const SortableList = SortableContainer(({items}) => {
                                     <thead className="ant-table-thead">
                                         <tr>
                                             <th className=""><span>课程名称</span></th>
+                                            <th className=""><span>简称</span></th>
                                             <th className=""><span>次序</span></th>
                                             <th className=""><span>排序</span></th>
                                         </tr>

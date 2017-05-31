@@ -36,9 +36,8 @@ export default class CsDetail extends Component {
         console.log('onSortEnd', items);
         let courses = [];
         items.map(i => {
-            courses.push(i._id);
+            courses.push(i.type + ':' + i._id);
         })
-        console.log('before request', courses, this.props.cs.get('_id'));
         this.props.updateCourseSet({
             csid: this.props.cs.get('_id'),
             courses
@@ -61,7 +60,9 @@ export default class CsDetail extends Component {
                 let tmp = {
                     key: t['_id'],
                     _id: t['_id'],
-                    name: t['name']
+                    name: t['name'],
+                    type: t['type'],
+                    abbr: t['abbr']
                 };
                 dataList.push(tmp);
             });

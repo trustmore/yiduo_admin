@@ -68,6 +68,12 @@ export default class CourseList extends Component {
                 render: (text, i) => <Link to={`/course/${i._id}`}>{text}</Link>
             },
             {
+                title: '简称',
+                dataIndex: 'abbr',
+                key: 'abbr',
+                render: (text, i) => <span>{text}</span>
+            },
+            {
                 title: '总分',
                 dataIndex: 'score',
                 key: 'score',
@@ -111,6 +117,7 @@ export default class CourseList extends Component {
                     key: t['_id'],
                     _id: t['_id'],
                     name: t['name'],
+                    abbr: t['abbr'],
                     score: t['score'],
                     sentence: 0
                 };
@@ -118,7 +125,7 @@ export default class CourseList extends Component {
             })
         }
         return (
-            <Table columns={columns} defaultPageSize={20} pagination={{defaultCurrent: 1, total: 50}} dataSource={dataList} />
+            <Table columns={columns} pagination={false} dataSource={dataList} />
         );
     }
     render() {

@@ -8,7 +8,7 @@ import startKoa from './utils/start-koa';
 import apiConfig from '../config/apiconfig/config-now';
 // 只是开发工具运行的端口(devserver)
 const HOST = 'localhost';
-const PORT = 8330;
+const PORT = 8320;
 
 // 使用环境变量将配置信息传到 node server，减少依赖
 process.env.NODE_DEV_HOSTNAME = HOST;
