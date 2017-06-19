@@ -137,7 +137,7 @@ class AddCourseForm extends Component {
                         message: '请填写文章名称',
                     }]
                 })(
-                    <Input />
+                    <Input placeholder="例如: 新概念英语第三课" />
                 )}
             </FormItem>
         );
@@ -159,7 +159,29 @@ class AddCourseForm extends Component {
                         message: '请填写课程简称',
                     }]
                 })(
-                    <Input style={{width: '25%'}} />
+                    <Input placeholder="例如: L2" style={{width: '25%'}} />
+                )}
+            </FormItem>
+        );
+    }
+    _renderTitle = () => {
+        const { getFieldDecorator } = this.props.form;
+        return (
+            <FormItem
+                {...formItemLayout}
+                label="文章名称"
+                hasFeedback >
+                {getFieldDecorator('title', {
+                    initialValue: this.state.title,
+                    rules: [{
+                        pattern: /\S+/,
+                        message: '请填写文章名称'
+                    }, {
+                        required: true,
+                        message: '请填写文章名称',
+                    }]
+                })(
+                    <Input placeholder="例如: New concept english" />
                 )}
             </FormItem>
         );
@@ -357,6 +379,7 @@ class AddCourseForm extends Component {
             <Form onSubmit={this.handleSubmit}>
                 {this._renderName()}
                 {this._renderAbbr()}
+                {this._renderTitle()}
                 {this._renderType()}
                 {this._renderScore()}
                 {this._renderScoreNote()}

@@ -110,7 +110,7 @@ class AddStudentForm extends Component {
                                 pattern: /^1\d{10}$/,
                                 message: '手机号码为 11 位'
                             }, {
-                                required: true, message: '请填写手机号码',
+                                required: false, message: '请填写手机号码',
                             }]
                         })(
                             <Input />

@@ -117,6 +117,11 @@ export default class Student extends Component {
                 key: 'clazz',
             },
             {
+                title: '邀请码',
+                dataIndex: 'invitecode',
+                key: 'invitecode',
+            },
+            {
                 title: '家长电话',
                 dataIndex: 'ptel',
                 key: 'ptel',
@@ -150,6 +155,7 @@ export default class Student extends Component {
                 _id: t.get('_id'),
                 name: t.get('name'),
                 key: t.get('_id'),
+                invitecode: t.get('invitecode'),
                 ptel: t.get('ptel'),
                 clazz: clazz ? clazz.get('name') : '未知'
             };

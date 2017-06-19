@@ -88,7 +88,7 @@ export default createReducer(I.fromJS(defaultState), {
 
     [UPDATE_STUDENT_SUCCESS](state, action) {
         message.success('修改成功');
-        var index = state.get('list').findIndex( item => item.get("_id") === action.result._id );
+        let index = state.get('list').findIndex( item => item.get("_id") === action.result._id );
         return state.setIn(['list', index], I.fromJS(action.result));
     },
     [MARK_STUDENT_SUCCESS](state, action) {
