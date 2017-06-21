@@ -69,8 +69,8 @@ export default class StudentDetail extends Component {
             },
             {
                 title: '得分',
-                dataIndex: 'score',
-                key: 'score',
+                dataIndex: 'stars',
+                key: 'stars',
             },
             {
                 title: '打分时间',
@@ -99,11 +99,17 @@ export default class StudentDetail extends Component {
             let stucourse = stucourses.find(r => {
                 return c._id === r.course;
             });
+            let stars = '';
+            if (stucourse){
+                if (stucourse.mark) {
+                    stars = stucourse.mark.score || '';
+                }
+            }
             let tmp = {
                 _id: c._id,
                 name: c.name,
                 key: c._id,
-                score: stucourse ? stucourse.score : '',
+                stars,
                 date: stucourse ? moment(stucourse.updateTime).format('YYYY-MM-DD HH:mm') : ''
             };
             dataList.push(tmp);
