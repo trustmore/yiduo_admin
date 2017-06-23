@@ -138,7 +138,7 @@ export default class CsList extends Component {
                     <span>
                         <a href='#' onClick={(e) => this.showEditModal(e, i._id)}>修改名称</a>
                         <span className="ant-divider" />
-                        <a href='#' onClick={(e) => this.linkToEdit(e, i._id)}>增删课程</a>
+                        <a href='#' onClick={(e) => this.linkToEdit(e, i._id)}>移除课程</a>
                         <span className="ant-divider" />
                         <a href='#' onClick={(e) => this.linkToDetail(e, i._id)}>调整课程顺序</a>
                     </span>
