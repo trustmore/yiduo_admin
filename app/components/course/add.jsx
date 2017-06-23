@@ -50,7 +50,6 @@ export default class StudentAdd extends Component {
         }
     }
     _handleAddSubmit = (values) => {
-        console.log('submit values', values);
         if (values.sentences && values.sentences.length > 0){
             let sentences = values.sentences;
             sentences.map((s, index) => {
@@ -59,7 +58,6 @@ export default class StudentAdd extends Component {
             });
             delete values.sentences;
         }
-        console.log('submit values', values);
         if (this.state.edit) {
             values._id = this.state.id;
             this.props.update(values).then(ret => {
@@ -76,7 +74,6 @@ export default class StudentAdd extends Component {
         }
     }
     render() {
-        console.log('add render');
         if (this.props.isFetching) {
             return (
                 <div>稍等...</div>

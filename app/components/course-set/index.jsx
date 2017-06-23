@@ -41,6 +41,14 @@ export default class CsList extends Component {
             }
         });
     }
+    linkToEdit(e, id) {
+        e.preventDefault();
+        this.props.fetchOne(id).then(ret => {
+            if (ret && ret.type === 'success') {
+                browserHistory.push(`/cs/${id}/edit`);
+            }
+        });
+    }
     onClickAddBtn = e => {
         e.preventDefault();
         this.setState({
@@ -115,13 +123,13 @@ export default class CsList extends Component {
                 title: '名称',
                 dataIndex: 'name',
                 key: 'name',
-                render: (text, i) => <a href='#' onClick={(e) => this.linkToDetail(e, i._id)}>{text}</a>
+                render: (text, i) => <span>{text}</span>
             },
             {
                 title: '课程数',
                 dataIndex: 'courses',
                 key: 'courses',
-                render: text => <a href="#">{text}</a>,
+                render: text => <span>{text}</span>
             },
             {
                 title: '操作',
@@ -130,7 +138,9 @@ export default class CsList extends Component {
                     <span>
                         <a href='#' onClick={(e) => this.showEditModal(e, i._id)}>修改名称</a>
                         <span className="ant-divider" />
-                        <a href='#' onClick={(e) => this.showAddCourseModal(e, i._id)}>编辑课程</a>
+                        <a href='#' onClick={(e) => this.linkToEdit(e, i._id)}>增删课程</a>
+                        <span className="ant-divider" />
+                        <a href='#' onClick={(e) => this.linkToDetail(e, i._id)}>调整课程顺序</a>
                     </span>
                 )
             }

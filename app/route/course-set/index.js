@@ -9,6 +9,11 @@ export default {
             path: ':id',
             onEnter: () => {},
             component: require('components/course-set/detail')
+        },
+        {
+            path: ':id/edit',
+            onEnter: () => {},
+            component: require('components/course-set/edit')
         }
     ]
 };

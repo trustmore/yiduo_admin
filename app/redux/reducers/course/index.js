@@ -27,6 +27,8 @@ import {
 
 let defaultState = I.fromJS({
     list: [],
+    total: 0,
+    page: 1,
     isFetching: false,
     course: {},
     creating: false
@@ -37,7 +39,7 @@ export default createReducer(I.fromJS(defaultState), {
         return state.set('isFetching', true);
     },
     [FETCH_COURSE_LIST_DATA_SUCCESS](state, action) {
-        return state.set('list', I.fromJS(action.result)).set('isFetching', false);
+        return state.set('list', I.fromJS(action.result.courses)).set('total', action.result.total).set('page', action.result.page).set('isFetching', false);
     },
 
     [FETCH_COURSE_DETAIL_SUCCESS](state, action) {
@@ -76,7 +78,7 @@ export default createReducer(I.fromJS(defaultState), {
 
 export const removeCacheCourse = createAction(REMOVE_CACHE_COURSE, 'payload');
 
-export function fetch() {
+export function fetch(params) {
     return {
         types: [FETCH_COURSE_LIST_DATA, FETCH_COURSE_LIST_DATA_SUCCESS, FETCH_COURSE_LIST_DATA_FAIL],
         promise: () => {
@@ -84,10 +86,7 @@ export function fetch() {
                 ajax({
                     url: '/course/all',
                     type: 'GET',
-                    data: {
-                        offset: 0,
-                        limit: 15
-                    },
+                    data: params,
                     success: response => resolve(response),
                     error: error => reject(error)
                 });

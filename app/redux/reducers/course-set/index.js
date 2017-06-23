@@ -19,7 +19,15 @@ import {
 
     CREATE_CS,
     CREATE_CS_SUCCESS,
-    CREATE_CS_FAIL
+    CREATE_CS_FAIL,
+
+    CS_ADD_COURSE,
+    CS_ADD_COURSE_SUCCESS,
+    CS_ADD_COURSE_FAIL,
+
+    CS_REMOVE_COURSE,
+    CS_REMOVE_COURSE_SUCCESS,
+    CS_REMOVE_COURSE_FAIL
 } from 'redux/action-types';
 
 let defaultState = I.fromJS({
@@ -33,11 +41,23 @@ export default createReducer(I.fromJS(defaultState), {
     },
     [UPDATE_CS_DATA_SUCCESS](state, action) {
         message.success('修改成功');
-        var index = state.get('cs').findIndex( item => item.get("_id") === action.result._id );
+        let index = state.get('cs').findIndex( item => item.get("_id") === action.result._id );
         if (action.result.name) {
             return state.setIn(['cs', index, 'name'], I.fromJS(action.result.name));
         }
         return state.setIn(['cs', index, 'courses'], I.fromJS(action.result.courses));
+    },
+    [CS_ADD_COURSE_SUCCESS](state, action) {
+        message.success('添加成功');
+        let index = state.get('cs').findIndex( item => item.get("_id") === action.result._id );
+        return state.setIn(['cs', index, 'courses'], I.fromJS(action.result.courses));
+    },
+    [CS_REMOVE_COURSE_SUCCESS](state, action) {
+        message.success('移除成功');
+        let cid = action.result.key.split(':').pop();
+        let _state = state.setIn(['current_cs', 'courses'], state.getIn(['current_cs', 'courses']).filter(c => c.get('_id') != cid));
+        let index = _state.get('cs').findIndex( item => item.get("_id") === action.result._id );
+        return _state.setIn(['cs', index, 'courses'], I.fromJS(action.result.courses));
     },
     [FETCH_CS_DETAIL_SUCCESS](state, action) {
         return state.set('current_cs', I.fromJS(action.result));
@@ -89,6 +109,40 @@ export function updateCourseSet(data) {
             return new Promise((resolve, reject) => {
                 ajax({
                     url: '/cs/update',
+                    type: 'POST',
+                    data,
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function addCourseToCs(data) {
+    return {
+        types: [CS_ADD_COURSE, CS_ADD_COURSE_SUCCESS, CS_ADD_COURSE_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: '/cs/add/course',
+                    type: 'POST',
+                    data,
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function removeCsCourse(data) {
+    return {
+        types: [CS_REMOVE_COURSE, CS_REMOVE_COURSE_SUCCESS, CS_REMOVE_COURSE_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: '/cs/remove/course',
                     type: 'POST',
                     data,
                     success: response => resolve(response),

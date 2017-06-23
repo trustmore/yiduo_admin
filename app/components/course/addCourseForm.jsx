@@ -35,6 +35,7 @@ class AddCourseForm extends Component {
             type: "recite",
             scoreNotes: [],
             score: 5,
+            grade: '1',
             uuid: 0
         }, course);
     }
@@ -99,6 +100,11 @@ class AddCourseForm extends Component {
     onScoreChange = (value) => {
         this.setState({
             score: parseInt(value)
+        });
+    }
+    onGradeChange = (value) => {
+        this.setState({
+            grade: parseInt(value)
         });
     }
     _onUploadSuccess = (key, obj) => {
@@ -166,6 +172,9 @@ class AddCourseForm extends Component {
     }
     _renderTitle = () => {
         const { getFieldDecorator } = this.props.form;
+        if (this.state.type == 'dictation' || this.state.type == 'performance') {
+            return null;
+        }
         return (
             <FormItem
                 {...formItemLayout}
@@ -206,6 +215,39 @@ class AddCourseForm extends Component {
                     <Select style={{width: '25%'}}>
                         <Option value="5">5</Option>
                         <Option value="6">6</Option>
+                    </Select>
+                )}
+            </FormItem>
+        );
+    }
+    _renderGrades = () => {
+        const { getFieldDecorator } = this.props.form;
+        return (
+            <FormItem
+                {...formItemLayout}
+                label="适用年级" >
+                {getFieldDecorator('grade', {
+                    initialValue: this.state.grade.toString(),
+                    onChange: this.onGradeChange,
+                    rules: [{
+                        pattern: /\S/,
+                        message: '请填写适用年级'
+                    }, {
+                        required: true,
+                        message: '请填写适用年级',
+                    }]
+                })(
+                    <Select style={{width: '25%'}}>
+                        <Option value="0">学前</Option>
+                        <Option value="1">一年级</Option>
+                        <Option value="2">二年级</Option>
+                        <Option value="3">三年级</Option>
+                        <Option value="4">四年级</Option>
+                        <Option value="5">五年级</Option>
+                        <Option value="6">六年级</Option>
+                        <Option value="7">七年级</Option>
+                        <Option value="8">八年级</Option>
+                        <Option value="9">九年级</Option>
                     </Select>
                 )}
             </FormItem>
@@ -379,8 +421,9 @@ class AddCourseForm extends Component {
             <Form onSubmit={this.handleSubmit}>
                 {this._renderName()}
                 {this._renderAbbr()}
-                {this._renderTitle()}
+                {this._renderGrades()}
                 {this._renderType()}
+                {this._renderTitle()}
                 {this._renderScore()}
                 {this._renderScoreNote()}
                 {this._renderArticle()}

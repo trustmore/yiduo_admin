@@ -44,14 +44,6 @@ export default class CsDetail extends Component {
         });
     };
     _renderCourseList = () => {
-        const columns = [
-            {
-                title: '名称',
-                dataIndex: 'name',
-                key: 'name',
-                render: (text, i) => <span>{text}</span>
-            }
-        ];
         let dataList = [];
         if (this.props.cs) {
             let cs = this.props.cs.toJS();
@@ -69,7 +61,7 @@ export default class CsDetail extends Component {
         }
         return (
             <SortableComponent onSortEnd={this.onSortEnd} dataList={dataList} />
-        );
+        )
     }
     render() {
         return (
