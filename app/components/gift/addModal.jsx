@@ -18,28 +18,33 @@ class AddGiftForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            image: props.currentGift ? props.currentGift.image : undefined
+            images: props.currentGift ? props.currentGift.images : []
         };
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        const image = this.state.image;
-        if (!image) {
+        const images = this.state.images;
+        if (!images || images.length==0) {
             return message.error('请上传奖品图片');
         }
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                values.image = image;
+                values.images = JSON.stringify(images);
                 this.props.onOk(values);
             }
         });
     }
     _onUploadSuccess = (obj) => {
-        console.log('_onUploadSuccess', obj.response.path);
-        this.state.image = obj.response.path;
+        this.state.images.push(obj.file.response.path);
+        console.log('===>', this.state.images);
     }
-    _onUploadRemove = () => {
-        delete this.state.image;
+    _onUploadRemove = (info) => {
+        let url = info.file.url || info.file.response.path;
+        let index = this.state.images.findIndex(i => i == url);
+        if (index >= 0){
+            this.state.images.splice(index, 1);
+        }
+        console.log('===>', this.state.images);
     }
     _renderUploadBtn() {
         return (
@@ -50,29 +55,33 @@ class AddGiftForm extends Component {
         );
     }
     _renderUpload = () => {
-        console.log('_renderUpload', '--------');
-        let defaultFileList = this.props.edit ? [{
-            uid: 'xxx',
-            name: 'xxx.png',
-            status: 'done',
-            url: this.props.currentGift.image
-        }] : [];
+        let imagesList = [];
+        if (this.props.edit){
+            this.state.images.map((path, index) => {
+                imagesList.push({
+                    uid: `image_${index}`,
+                    name: `image_${index}.png`,
+                    status: 'done',
+                    url: path
+                });
+            });
+        }
         let uploadProps = {
             name: 'file',
             action: '/api/upload/image',
             listType: "picture-card",
-            defaultFileList,
+            defaultFileList: imagesList,
             headers: {
                 authorization: getToken()
             },
             onChange: (info) => {
                 if (info.file.status === 'removed') {
-                    this._onUploadRemove();
+                    this._onUploadRemove(info);
                 }
                 if (info.file.status === 'done') {
                     message.success(`${info.file.name} 上传成功`);
                     console.log('_onUploadSuccess', info);
-                    this._onUploadSuccess(info.file);
+                    this._onUploadSuccess(info);
                 } else if (info.file.status === 'error') {
                     message.error(`${info.file.name} 上传失败`);
                 }

@@ -108,6 +108,9 @@ export default class CourseList extends Component {
         });
     }
     _renderAddToCs() {
+        if (!this.props.courseList){
+            return null;
+        }
         return (
             <div>
                 <span>将已选课程添加到课程集: &nbsp;&nbsp;</span>

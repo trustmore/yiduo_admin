@@ -9,6 +9,9 @@ import {
     FETCH_TEACHER_LIST_DATA,
     FETCH_TEACHER_LIST_DATA_SUCCESS,
     FETCH_TEACHER_LIST_DATA_FAIL,
+    FETCH_TEACHER_DETAIL,
+    FETCH_TEACHER_DETAIL_SUCCESS,
+    FETCH_TEACHER_DETAIL_FAIL,
     CREATE_TEACHER,
     CREATE_TEACHER_SUCCESS,
     CREATE_TEACHER_FAIL,
@@ -22,6 +25,7 @@ import {
 
 let defaultState = I.fromJS({
     list: [],
+    teacher: {},
     isFetching: false
 });
 
@@ -68,6 +72,16 @@ export default createReducer(I.fromJS(defaultState), {
     },
     [DELETE_TEACHER_FAIL](state, action) {
         return state;
+    },
+
+    [FETCH_TEACHER_DETAIL](state, action) {
+        return state.set('isFetching', true);
+    },
+    [FETCH_TEACHER_DETAIL_SUCCESS](state, action) {
+        return state.set('teacher', I.fromJS(action.result)).set('isFetching', false);
+    },
+    [FETCH_TEACHER_DETAIL_FAIL](state, action) {
+        return state.set('isFetching', false);
     }
 });
 
@@ -134,6 +148,25 @@ export function remove(params) {
                     url: '/teacher/delete',
                     type: 'POST',
                     data: params,
+                    success: response => resolve(response),
+                    error: error => reject(error)
+                });
+            });
+        }
+    };
+}
+
+export function fetchOne(id) {
+    return {
+        types: [FETCH_TEACHER_DETAIL, FETCH_TEACHER_DETAIL_SUCCESS, FETCH_TEACHER_DETAIL_FAIL],
+        promise: () => {
+            return new Promise((resolve, reject) => {
+                ajax({
+                    url: `/teacher/${id}/detail`,
+                    type: 'POST',
+                    data: {
+                        id
+                    },
                     success: response => resolve(response),
                     error: error => reject(error)
                 });

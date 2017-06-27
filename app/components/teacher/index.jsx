@@ -103,14 +103,17 @@ export default class Teacher extends Component {
                 render: (text, i) => (
                     <span>
                         <a href='#' onClick={(e) => this.onOpenEdit(e, i._id)}>编辑</a>
-                        <span className="ant-divider" />
-                        <Popconfirm title="确认删除吗？" onConfirm={() => this.remove(i._id)} okText="确认" cancelText="取消">
-                            <a href="#">删除</a>
-                        </Popconfirm>
                     </span>
                 )
             }
         ];
+        /*
+        先把删除教师功能屏蔽了
+        <span className="ant-divider" />
+        <Popconfirm title="确认删除吗？" onConfirm={() => this.remove(i._id)} okText="确认" cancelText="取消">
+            <a href="#">删除</a>
+        </Popconfirm>
+        */
         let dataList = [];
         let teacherList = this.props.teacherList.toArray();
         teacherList.map((t, i) => {
@@ -123,7 +126,7 @@ export default class Teacher extends Component {
             dataList.push(tmp);
         })
         return (
-            <Table columns={columns} defaultPageSize={20} pagination={{defaultCurrent: 1, total: 50}} dataSource={dataList} />
+            <Table columns={columns} defaultPageSize={20} pagination={false} dataSource={dataList} />
         );
     }
     render() {

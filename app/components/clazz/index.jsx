@@ -131,6 +131,11 @@ export default class Student extends Component {
                 key: 'cs',
             },
             {
+                title: '学生人数',
+                dataIndex: 'studentCnt',
+                key: 'studentCnt',
+            },
+            {
                 title: '',
                 key: 'rank',
                 render: (text, s) => (
@@ -153,6 +158,7 @@ export default class Student extends Component {
                 _id: t.get('_id'),
                 name: t.get('name'),
                 grade: t.get('grade'),
+                studentCnt: t.get('studentCnt'),
                 cs: cs ? cs.get('name') : undefined,
                 rank: t.get('rank')
             };

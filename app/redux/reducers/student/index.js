@@ -35,6 +35,8 @@ let defaultState = I.fromJS({
     list: [],
     isFetching: false,
     detail: {},
+    total: 0,
+    page: 1,
     creating: false
 });
 
@@ -43,7 +45,7 @@ export default createReducer(I.fromJS(defaultState), {
         return state.set('isFetching', true);
     },
     [FETCH_STUDENT_LIST_DATA_SUCCESS](state, action) {
-        return state.set('list', I.fromJS(action.result)).set('isFetching', false);
+        return state.set('list', I.fromJS(action.result.students)).set('total', action.result.total).set('page', action.result.page).set('isFetching', false);
     },
     [FETCH_STUDENT_LIST_DATA_FAIL](state, action) {
         return state;
@@ -105,7 +107,7 @@ export default createReducer(I.fromJS(defaultState), {
     }
 });
 
-export function fetch() {
+export function fetch(params) {
     return {
         types: [FETCH_STUDENT_LIST_DATA, FETCH_STUDENT_LIST_DATA_SUCCESS, FETCH_STUDENT_LIST_DATA_FAIL],
         promise: () => {
@@ -113,10 +115,7 @@ export function fetch() {
                 ajax({
                     url: '/student/all',
                     type: 'GET',
-                    data: {
-                        offset: 0,
-                        limit: 15
-                    },
+                    data: params,
                     success: response => resolve(response),
                     error: error => reject(error)
                 });

@@ -4,7 +4,8 @@ import {Link} from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { create, fetch, remove, update } from 'redux/reducers/student';
-import { Table, Icon, Popconfirm } from 'antd';
+import { Table, Icon, Popconfirm, Select } from 'antd';
+const Option = Select.Option;
 import AddModal from './addModal';
 
 import style from 'styles/modules/home/home.scss';
@@ -13,6 +14,8 @@ import style from 'styles/modules/home/home.scss';
     state => ({
         isFetching: state.getIn(['student', 'isFetching']),
         clazzList: state.getIn(['clazz', 'list']),
+        total: state.getIn(['student', 'total']),
+        page: state.getIn(['student', 'page']),
         list: state.getIn(['student', 'list'])
     }),
     dispatch => bindActionCreators({create, fetch, remove, update}, dispatch)
@@ -21,6 +24,8 @@ export default class Student extends Component {
     static propTypes = {
         list: PropTypes.object,
         clazzList: PropTypes.object,
+        total: PropTypes.number,
+        page: PropTypes.number,
         isFetching: PropTypes.object,
         fetch: PropTypes.func,
         update: PropTypes.func,
@@ -95,6 +100,12 @@ export default class Student extends Component {
     remove(_id) {
         this.props.remove({_id}).then(ret => {});
     }
+    onFilter = (value, type) => {
+        this.state[type] = value;
+        let params = {};
+        this.state[type] == 'all' ? null : params[type] = this.state[type];
+        this.props.fetch(params);
+    }
     _renderAddBtn() {
         return (
             <a onClick={this.onClickAddBtn} href="#">
@@ -102,6 +113,15 @@ export default class Student extends Component {
                 <span>添加学生</span>
             </a>
         )
+    }
+    _renderClazzOptions() {
+        let clazzes = this.props.clazzList.toJS();
+        let options = clazzes.map(c => {
+            return (
+                <Option value={c._id} key={c._id}>{c.name}</Option>
+            )
+        })
+        return options;
     }
     _renderStudentList() {
         const columns = [
@@ -160,9 +180,19 @@ export default class Student extends Component {
                 clazz: clazz ? clazz.get('name') : '未知'
             };
             dataList.push(tmp);
-        })
+        });
+        let pagination = {
+            pageSize: 50,
+            current: this.props.page,
+            total: this.props.total,
+            onChange: (page, pageSize) => {
+                let params = {page, pageSize};
+                this.state.clazz == 'all' ? null : params.clazz = this.state.clazz;
+                this.props.fetch(params);
+            }
+        }
         return (
-            <Table columns={columns} defaultPageSize={20} pagination={{defaultCurrent: 1, total: 50}} dataSource={dataList} />
+            <Table columns={columns} defaultPageSize={20} pagination={pagination} dataSource={dataList} />
         );
     }
     render() {
@@ -172,6 +202,13 @@ export default class Student extends Component {
                     <h1>学生</h1>
                 </div>
                 { this._renderLoading() }
+                <div style={{margin: '20px 0'}}>
+                    <span>学生筛选:&nbsp; </span>
+                    <Select onChange={(value) => {this.onFilter(value, 'clazz')}} defaultValue='all' style={{ width: 120 }} >
+                        <Option value="all">全部</Option>
+                        {this._renderClazzOptions()}
+                    </Select>
+                </div>
                 { this._renderStudentList() }
 
                 <AddModal

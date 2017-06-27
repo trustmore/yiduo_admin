@@ -20,13 +20,11 @@ class AddCsForm extends Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
                 this.props.onSubmit(values);
             }
         });
     }
     render() {
-        console.log('cs modal ', this.props);
         const { getFieldDecorator } = this.props.form;
         let name = this.props.edit ? this.props.currentCs.name : undefined;
         let okText = this.props.edit ? '修改' : '添加';
@@ -54,7 +52,7 @@ class AddCsForm extends Component {
                                 message: '请填写课程集名称',
                             }]
                         })(
-                            <Input />
+                            <Input placeholder="课程集名称" />
                         )}
                     </FormItem>
                 </Form>
