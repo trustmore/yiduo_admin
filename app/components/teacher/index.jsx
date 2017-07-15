@@ -98,6 +98,12 @@ export default class Teacher extends Component {
                 render: (text, i) => <span>{text}</span>
             },
             {
+                title: '邀请码',
+                dataIndex: 'invitecode',
+                key: 'invitecode',
+                render: (text, i) => <span>{text}</span>
+            },
+            {
                 title: '操作',
                 key: 'action',
                 render: (text, i) => (
@@ -121,6 +127,7 @@ export default class Teacher extends Component {
                 _id: t.get('_id'),
                 key: t.get('_id'),
                 ename: t.get('ename'),
+                invitecode: t.get('invitecode'),
                 name: t.get('name')
             };
             dataList.push(tmp);
