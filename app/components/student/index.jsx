@@ -132,6 +132,11 @@ export default class Student extends Component {
                 render: (text, i) => <Link to={`/student/${i._id}`}>{text}</Link>
             },
             {
+                title: '积分',
+                dataIndex: 'stars',
+                key: 'stars',
+            },
+            {
                 title: '班级',
                 dataIndex: 'clazz',
                 key: 'clazz',
@@ -174,6 +179,7 @@ export default class Student extends Component {
             let tmp = {
                 _id: t.get('_id'),
                 name: t.get('name'),
+                stars: t.get('stars') || 0,
                 key: t.get('_id'),
                 invitecode: t.get('invitecode'),
                 ptel: t.get('ptel'),

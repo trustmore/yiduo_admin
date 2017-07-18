@@ -115,7 +115,7 @@ export default class CourseList extends Component {
             <div>
                 <span>将已选课程添加到课程集: &nbsp;&nbsp;</span>
                 <Select onChange={(value) => {this.onTargetCsChange(value)}} defaultValue='none' style={{ width: 120 }} >
-                    <Option value="none">选择课程</Option>
+                    <Option value="none">选择课程集</Option>
                     {this.renderOptions()}
                 </Select>&nbsp;&nbsp;
                 <Button onClick={() => {this.addCourseToCs()}} type="primary">添加</Button>
